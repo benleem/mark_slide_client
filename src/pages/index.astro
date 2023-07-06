@@ -1,0 +1,31 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Welcome to Mark Slide">
+	<main>
+		<h1>Welcome to <span class="text-gradient">Mark Slide</span></h1>
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		max-width: 60ch;
+		height: 100%;
+		display: flex;
+		align-items: center;
+	}
+	h1 {
+		font-size: 3rem;
+		font-weight: 800;
+		margin: 0;
+	}
+	.text-gradient {
+		background-image: var(--accent-gradient);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 400%;
+		background-position: 0%;
+	}
+</style>
