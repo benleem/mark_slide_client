@@ -1,0 +1,17 @@
+---
+export interface UserCardProps {
+	text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<div class="user-card">
+    <p>{text}</p>
+</div>
+
+<style>
+    .user-card{
+        padding: 0rem;
+    }
+</style>

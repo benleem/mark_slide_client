@@ -1,0 +1,38 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const getCurrentUser = async() =>  {
+	try {
+		const response = await fetch("http://localhost:8000/auth/current_user",
+		{
+			method: 'GET',
+			headers:{
+				"Authorization": `Bearer ${Astro.cookies.get("token").value}`
+			}
+		});
+		const jsonResponse = await response.json();
+		if (jsonResponse.data) {
+			let currentUser: string = jsonResponse.data.user_id
+			return currentUser;
+		}
+		let currentUser: string = jsonResponse.message
+		return currentUser;
+	} catch (error:unknown) {
+		if (error instanceof Error) {
+			return error.message
+		}
+	}
+}
+
+let currentUser: string = await getCurrentUser() as string;
+---
+    
+<style>
+
+</style>
+
+<Layout title="Profile">
+    <p>{currentUser}</p>
+</Layout>
+
+
