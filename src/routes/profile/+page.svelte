@@ -10,14 +10,13 @@
     }
 
     export const logout = async() => {
-        const response = await fetch("http://localhost:8000/auth/logout",{headers:{"Authorization":`Bearer ${data.token}`}});
+        const response = await fetch("http://localhost:8000/auth/logout",{credentials:"include", headers:{"Authorization":`Bearer ${data.token}`}});
         const responseJson = await response.json();
         if (responseJson.status === "success") {
             goto("/")
         }
     }
 </script>
-
 
 <section class="h-full w-full flex flex-col items-center justify-center">
     {#if data.user}
