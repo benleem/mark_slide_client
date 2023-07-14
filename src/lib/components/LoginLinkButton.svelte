@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_API_BASE_URL } from "$env/static/public";
 	import { goto } from "$app/navigation";
     
     let isLoading:boolean = false
@@ -7,7 +8,7 @@
     const getLoginUrl = async() => {
         isLoading = true
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`)
+            const response = await fetch(`${PUBLIC_API_BASE_URL}/auth/login`)
             const responseJson = await response.json()
             
             if (!responseJson.data) {
