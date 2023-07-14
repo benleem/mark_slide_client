@@ -7,7 +7,7 @@
     const getLoginUrl = async() => {
         isLoading = true
         try {
-            const response = await fetch("http://localhost:8000/auth/login")
+            const response = await fetch("https://markslide-production.up.railway.app/auth/login")
             const responseJson = await response.json()
             
             if (!responseJson.data) {
