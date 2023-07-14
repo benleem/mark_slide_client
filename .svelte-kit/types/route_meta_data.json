@@ -1,0 +1,8 @@
+{
+	"/": [
+		"src/routes/+page.ts"
+	],
+	"/profile": [
+		"src/routes/profile/+page.server.ts"
+	]
+}
