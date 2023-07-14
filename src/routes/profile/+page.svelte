@@ -5,12 +5,12 @@
     
     export let data: PageData
 
-    export const convertTime = (date: Date) => {
+    const convertTime = (date: Date) => {
         let convertedDate = new Date(date).toLocaleDateString('en-us', {year:"numeric", month:"short", hour:"numeric", minute:"numeric"});
         return convertedDate
     }
 
-    export const logout = async() => {
+    const logout = async() => {
         const response = await fetch("http://localhost:8000/auth/logout",{credentials:"include", headers:{"Authorization":`Bearer ${data.token}`}});
         const responseJson = await response.json();
         if (responseJson.status === "success") {
@@ -33,8 +33,8 @@
                 <ProfileItem label="Name" value={data.user.name}/>
                 <ProfileItem label="Username" value={data.user.username}/>
                 <ProfileItem label="Email" value={data.user.email}/>
-                <ProfileItem label="Created" value={data.user.created_at}/>
-                <ProfileItem label="Updated" value={data.user.updated_at}/>
+                <ProfileItem label="Created" value={convertTime(data.user.created_at)}/>
+                <ProfileItem label="Updated" value={convertTime(data.user.updated_at)}/>
             </div>
         </div>
     {:else if !data.user || data.error}
