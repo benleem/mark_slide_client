@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-    import { API_BASE_URL } from '$env/static/private';
-
     
     let isLoading:boolean = false
     let isError:boolean = false
@@ -9,7 +7,7 @@
     const getLoginUrl = async() => {
         isLoading = true
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/login`)
+            const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`)
             const responseJson = await response.json()
             
             if (!responseJson.data) {
