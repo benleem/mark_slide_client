@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { goto } from '$app/navigation';
     import type { PageData } from './$types'
+    import { goto } from '$app/navigation'
+    import ProfileItem from '$lib/components/ProfileItem.svelte';
     
     export let data: PageData
 
@@ -22,18 +23,18 @@
     {#if data.user}
         <div class="flex flex-col p-4">
             <div class="pb-1 flex justify-end">
-                <button class="text-blue-400" on:click={logout}>Logout</button>
+                <button class="text-blue-500" on:click={logout}>Logout</button>
             </div>
             <a href={data.user.profile_url}>
                 <img class="w-full max-w-xs aspect-square rounded-xl" src={data.user.avatar_url} alt="profile">
             </a>
-            <div class="pt-4 text-white">
-                <p><span class="text-gray-400">Id: </span>{data.user.id}</p>
-                <p><span class="text-gray-400">Name: </span>{data.user.name}</p>
-                <p><span class="text-gray-400">Username: </span>{data.user.username}</p>
-                <p><span class="text-gray-400">Email: </span>{data.user.email}</p>
-                <p><span class="text-gray-400">Created: </span>{convertTime(data.user.created_at)}</p>
-                <p><span class="text-gray-400">Updated: </span>{convertTime(data.user.updated_at)}</p>
+            <div class="pt-4">
+                <ProfileItem label="Id" value={data.user.id}/>
+                <ProfileItem label="Name" value={data.user.name}/>
+                <ProfileItem label="Username" value={data.user.username}/>
+                <ProfileItem label="Email" value={data.user.email}/>
+                <ProfileItem label="Created" value={data.user.created_at}/>
+                <ProfileItem label="Updated" value={data.user.updated_at}/>
             </div>
         </div>
     {:else if !data.user || data.error}
