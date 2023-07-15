@@ -12,7 +12,9 @@
     }
 
     const logout = async() => {
-        const response = await fetch(`${PUBLIC_API_BASE_URL}/auth/logout`,{credentials:"include", headers:{"Authorization":`Bearer ${data.token}`}});
+        const response = await fetch(`${PUBLIC_API_BASE_URL}/auth/logout`,{
+            credentials:"include", 
+            headers:{"Authorization":`Bearer ${data.token}`}});
         const responseJson = await response.json();
         if (responseJson.status === "success") {
             goto("/")
