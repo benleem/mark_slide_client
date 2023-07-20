@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_API_BASE_URL } from '$env/static/public';
     import type { PageData } from './$types'
     import { goto } from '$app/navigation'
     import ProfileItem from '$lib/components/ProfileItem.svelte';
@@ -11,7 +12,9 @@
     }
 
     const logout = async() => {
-        const response = await fetch("http://localhost:8000/auth/logout",{credentials:"include", headers:{"Authorization":`Bearer ${data.token}`}});
+        const response = await fetch(`${PUBLIC_API_BASE_URL}/auth/logout`,{
+            credentials:"include", 
+            headers:{"Authorization":`Bearer ${data.token}`}});
         const responseJson = await response.json();
         if (responseJson.status === "success") {
             goto("/")
