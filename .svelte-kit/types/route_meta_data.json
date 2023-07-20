@@ -1,8 +1,12 @@
 {
-	"/": [
-		"src/routes/+page.ts"
-	],
+	"/": [],
 	"/profile": [
 		"src/routes/profile/+page.server.ts"
+	],
+	"/shows": [
+		"src/routes/shows/+page.server.ts"
+	],
+	"/shows/[slug]": [
+		"src/routes/shows/[slug]/+page.ts"
 	]
 }
