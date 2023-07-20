@@ -1,0 +1,36 @@
+<script lang="ts">
+    import { PUBLIC_API_BASE_URL } from "$env/static/public";
+    import type { PageData } from './$types';
+    import { writable } from 'svelte/store';
+    import { onMount } from 'svelte';
+    export let data: PageData
+
+    const slides = writable([]);
+
+    const getSlides = async () => {
+        const response = await fetch(`${PUBLIC_API_BASE_URL}/slides/${data.slug}`, {
+            credentials: "include",
+            headers: { "Authorization": `Bearer ${data.token}` }
+        });
+        const responseJson = await response.json();
+        console.log(`this::: ${JSON.stringify(responseJson)}`);
+
+        if (responseJson.status === "success") {
+            slides.set(responseJson); 
+        }
+    };
+   onMount(getSlides);
+</script>
+
+<section class="flex-grid">
+    {#each $slides as slide}
+        <div class="pt-4">
+            <SlideViewItem label="ShowID" value={show.show_id}/>
+            <SlideViewItem label="Content" value={slide.content}/>
+            <SlideViewItem label="Id" value={slide.id}/>
+            <SlideViewItem label="UserID" value={slide.user_id}/>
+            <SlideViewItem label="Created" value={convertTime(slide.created_at)}/>
+            <SlideViewItem label="Updated" value={convertTime(slide.updated_at)}/>
+        </div>
+    {/each}
+</section>
