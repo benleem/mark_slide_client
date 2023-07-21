@@ -38,7 +38,7 @@
     };
 
 
-    onMount(getShows);
+   onMount(getShows);
 </script>
 
 <section class="h-full w-full flex flex-col items-center justify-center">

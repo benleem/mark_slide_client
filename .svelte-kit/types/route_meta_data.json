@@ -7,6 +7,6 @@
 		"src/routes/shows/+page.server.ts"
 	],
 	"/shows/[slug]": [
-		"src/routes/shows/[slug]/+page.ts"
+		"src/routes/shows/[slug]/+page.server.ts"
 	]
 }

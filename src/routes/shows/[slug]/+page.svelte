@@ -3,6 +3,7 @@
     import type { PageData } from './$types';
     import { writable } from 'svelte/store';
     import { onMount } from 'svelte';
+    import SlideViewItem from '$lib/components/ShowViewItem.svelte';
     export let data: PageData
 
     const slides = writable([]);
@@ -13,10 +14,10 @@
             headers: { "Authorization": `Bearer ${data.token}` }
         });
         const responseJson = await response.json();
-        console.log(`this::: ${JSON.stringify(responseJson)}`);
+        console.log(`this::: ${JSON.stringify(responseJson.data.slides)}`);
 
         if (responseJson.status === "success") {
-            slides.set(responseJson); 
+            slides.set(responseJson.data.slides); 
         }
     };
    onMount(getSlides);
@@ -25,12 +26,12 @@
 <section class="flex-grid">
     {#each $slides as slide}
         <div class="pt-4">
-            <SlideViewItem label="ShowID" value={show.show_id}/>
+            <SlideViewItem label="ShowID" value={slide.show_id}/>
             <SlideViewItem label="Content" value={slide.content}/>
             <SlideViewItem label="Id" value={slide.id}/>
             <SlideViewItem label="UserID" value={slide.user_id}/>
-            <SlideViewItem label="Created" value={convertTime(slide.created_at)}/>
-            <SlideViewItem label="Updated" value={convertTime(slide.updated_at)}/>
+            <SlideViewItem label="Created" value={slide.created_at}/>
+            <SlideViewItem label="Updated" value={slide.updated_at}/>
         </div>
     {/each}
 </section>
