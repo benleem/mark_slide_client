@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { PUBLIC_API_BASE_URL } from '$env/static/public';
-    import type { PageData } from './$types'
+    import { writable } from 'svelte/store';
+    import { onMount } from 'svelte';
+    import type { PageData } from './$types';
     import { goto } from '$app/navigation'
     import ProfileItem from '$lib/components/ProfileItem.svelte';
+    import ShowViewItem from '$lib/components/ShowViewItem.svelte';
     
     export let data: PageData
 
@@ -17,9 +20,23 @@
             headers:{"Authorization":`Bearer ${data.token}`}});
         const responseJson = await response.json();
         if (responseJson.status === "success") {
-            goto("/")
+                goto("/")
         }
     }
+
+    const shows = writable([]);
+    const getShows = async () => {
+        const response = await fetch(`${PUBLIC_API_BASE_URL}/shows/users/${data.user.id}?favorites=false`, {
+            credentials: "include",
+            headers: { "Authorization": `Bearer ${data.token}` }
+        });
+        const responseJson = await response.json();
+        if (responseJson.status === "success") {
+            shows.set(responseJson.data.shows); 
+        }
+    };
+
+   onMount(getShows);
 </script>
 
 <section class="h-full w-full flex flex-col items-center justify-center">
@@ -43,4 +60,18 @@
     {:else if !data.user || data.error}
         <p class="text-red-500">{data.error}</p>
     {/if}
+
+    <section class="flex-grid">
+        {#each $shows as show}
+            <div class="pt-4">
+                <ShowViewItem label="Title" value={show.title}/>
+                <ShowViewItem label="Description" value={show.description}/>
+                <ShowViewItem label="Id" value={show.id}/>
+                <ShowViewItem label="Public" value={show.public}/>
+                <ShowViewItem label="Created" value={convertTime(show.created_at)}/>
+                <ShowViewItem label="Updated" value={convertTime(show.updated_at)}/>
+                <button on:click={() => goto(`/shows/${show.id}`)}>CLICK ME</button>
+            </div>
+        {/each}
+    </section>
 </section>
