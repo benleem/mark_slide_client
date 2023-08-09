@@ -18,6 +18,7 @@
             
             const loginUrl = responseJson.data.login_url
             goto(loginUrl)
+            isLoading = false
         } catch (error) {
             if (error instanceof Error) {
                 isError = true
