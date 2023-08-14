@@ -1,25 +1,9 @@
 <script lang="ts">
-	import { PUBLIC_API_BASE_URL } from '$env/static/public';
+    import { convertTime, timeSince } from "$lib/utils/helpers";
+    import type { Show } from "$lib/models/shows";
     import { writable } from 'svelte/store';
-    import { onMount } from 'svelte';
-    import type { PageData } from '../../routes/profile/$types';
-    import { goto } from '$app/navigation'
-    import { convertTime } from "$lib/utils/helpers";
-
-    export let data: PageData
-    const shows = writable([]);
-    const getShows = async () => {
-        const response = await fetch(`${PUBLIC_API_BASE_URL}/shows/users/${data.user.id}?favorites=false`, {
-            credentials: "include",
-            headers: { "Authorization": `Bearer ${data.token}` }
-        });
-        const responseJson = await response.json();
-        console.log(`HERE:::   ${responseJson.data.shows[1].title}`);
-        if (responseJson.status === "success") {
-            shows.set(responseJson.data.shows); 
-        }
-    };
-   onMount(getShows);
+    
+    export let shows: writable<Show[]>;
 </script>
 
 <style>
@@ -53,20 +37,14 @@
         border-radius: 12px;
         background-color: red;
     }
-
-   .tile-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-
 </style>
 
 <section class="grid grid-cols-3 gap-5">
     {#each $shows as show}
         <div>
-            <div class="show-tile" on:click={() => goto(`/shows/${show.id}`)}>
-                <h1 class="text-center text-black p-10 hover:font-bold">{show.title}</h1>
+ <!-- on:click={() => goto(`/shows/${show.id}`)} -->
+            <div class="show-tile group">
+                <h1 class="text-center text-black p-10 group-hover:font-bold group-hover:ease-in-out duration-500">{show.title}</h1>
                 <h2 class="text-center text-white"> {show.description}</h2>
                 <div class="flex justify-end gap-1">
                     <button class="material-symbols-outlined p-1 bg-blue-500 text-white rounded-full hover:bg-blue-700 transition-all">
@@ -77,14 +55,14 @@
                     </button>
                 </div>
             </div>
-            <ul class="flex flex-row">
-                {#if show.public}
+            <ul class="flex flex-row justify-between">
+                {#if show.is_public}
                     <li class="material-symbols-outlined">visibility</li>
                 {:else}
                     <li class="material-symbols-outlined">visibility_off</li>
                 {/if}
-                <li>{convertTime(show.created_at)}</li>
-                <li>{convertTime(show.updated_at)}</li>
+                <!-- <li>{(show.created_at)}</li> -->
+                <li>last updated {timeSince(show.updated_at)} days ago</li>
             </ul>
         </div>
     {/each}
