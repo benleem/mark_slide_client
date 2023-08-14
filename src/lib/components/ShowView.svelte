@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { convertTime, timeSince } from "$lib/utils/helpers";
+    import { timeSince } from "$lib/utils/helpers";
     import type { Show } from "$lib/models/shows";
-    import { writable } from 'svelte/store';
+    import type { writable } from 'svelte/store';
     import { goto } from '$app/navigation';
     
-    export let shows: writable<Show[]>;
+    export let shows: typeof writable<Show[]>;
 </script>
 
 <style>
