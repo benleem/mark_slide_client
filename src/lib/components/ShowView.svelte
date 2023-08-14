@@ -2,6 +2,7 @@
     import { convertTime, timeSince } from "$lib/utils/helpers";
     import type { Show } from "$lib/models/shows";
     import { writable } from 'svelte/store';
+    import { goto } from '$app/navigation';
     
     export let shows: writable<Show[]>;
 </script>
@@ -42,8 +43,7 @@
 <section class="grid grid-cols-3 gap-5">
     {#each $shows as show}
         <div>
- <!-- on:click={() => goto(`/shows/${show.id}`)} -->
-            <div class="show-tile group">
+            <div class="show-tile group" on:click={() => goto(`/shows/${show.id}`)}>
                 <h1 class="text-center text-black p-10 group-hover:font-bold group-hover:ease-in-out duration-500">{show.title}</h1>
                 <h2 class="text-center text-white"> {show.description}</h2>
                 <div class="flex justify-end gap-1">
