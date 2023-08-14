@@ -3,6 +3,13 @@ export const convertTime = (date: Date) => {
     return convertedDate
 }
 
+export const timeSince = (date: Date) => {
+    const currentTime = new Date();
+    const timeDifference = currentTime.getTime() - date.getTime();
+    const daysPassed = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    return daysPassed;
+}
+
 
 
 
