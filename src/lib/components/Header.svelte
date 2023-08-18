@@ -4,6 +4,16 @@
 
     let isModalActive = false
     let mode: "add" | "edit" | "delete" = "add"
+    let show = {
+        id: "",
+        user_id: 0,
+        title: "",
+        description: "",
+        view_code: "",
+        public: false,
+        created_at: "" as unknown as Date,
+        updated_at: "" as unknown as Date,
+    }
 
     const handleModalOpen = (modelMode:"add" | "edit" | "delete") => { 
         isModalActive = true
@@ -26,15 +36,9 @@
             <li>
                 <button class="text-green-500" on:click={() => handleModalOpen("add")}>New</button>
             </li>
-            <li>
-                <button class="text-yellow-500" on:click={() => handleModalOpen("edit")}>Edit</button>
-            </li> 
-            <li>
-                <button class="text-red-500" on:click={() => handleModalOpen("delete")}>Delete</button>
-            </li>
         </ul>
     </nav>
 </header>
 <ModalContainer bind:modal={isModalActive}>
-    <ShowForm mode={mode} bind:modal={isModalActive}/>
+    <ShowForm mode={mode} show={show} bind:modal={isModalActive}/>
 </ModalContainer>

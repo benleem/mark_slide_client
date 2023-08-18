@@ -1,19 +1,15 @@
 <script lang="ts">
+    import type { PageData } from './$types';
 	import { PUBLIC_API_BASE_URL } from '$env/static/public';
     import { writable } from 'svelte/store';
     import { onMount } from 'svelte';
-    import type { PageData } from './$types';
     import { goto } from '$app/navigation'
+    import { convertTime } from '$lib/utils/helpers';
     import ProfileItem from '$lib/components/ProfileItem.svelte';
     import ShowViewItem from '$lib/components/ShowViewItem.svelte';
     
     export let data: PageData
-
-    const convertTime = (date: Date) => {
-        let convertedDate = new Date(date).toLocaleDateString('en-us', {year:"numeric", month:"short", hour:"numeric", minute:"numeric"});
-        return convertedDate
-    }
-
+    
     const logout = async() => {
         const response = await fetch(`${PUBLIC_API_BASE_URL}/auth/logout`,{
             credentials:"include", 
