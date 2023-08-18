@@ -1,10 +1,17 @@
 export type Show = {
-    id: String,
-    user_id: number,
-    title: String,
-    description: String,
-    view_code: String,
-    is_public: boolean,
-    created_at: Date,
-    updated_at: Date
-}
+	id: string;
+	user_id: number;
+	title: string;
+	description: string;
+	view_code: string;
+	public: boolean;
+	created_at: Date;
+	updated_at: Date;
+};
+
+export type ShowFormData = {
+	title: string;
+	description: string;
+	view_code: string;
+	public: boolean;
+};
