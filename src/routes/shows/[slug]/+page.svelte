@@ -4,6 +4,8 @@
     import { writable } from 'svelte/store';
     import { onMount } from 'svelte';
     import SlideViewItem from '$lib/components/ShowViewItem.svelte';
+    import { marked } from 'marked';
+
     export let data: PageData
 
     const slides = writable([]);
@@ -27,7 +29,9 @@
     {#each $slides as slide}
         <div class="pt-4">
             <SlideViewItem label="ShowID" value={slide.show_id}/>
-            <SlideViewItem label="Content" value={slide.content}/>
+
+            {@html marked(slide.content)}
+            <!-- <SlideViewItem label="Content" value={slide.content}/> -->
             <SlideViewItem label="Id" value={slide.id}/>
             <SlideViewItem label="UserID" value={slide.user_id}/>
             <SlideViewItem label="Created" value={slide.created_at}/>

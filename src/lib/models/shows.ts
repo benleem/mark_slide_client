@@ -1,6 +1,6 @@
 export type Show = {
     id: String,
-    user_id: String,
+    user_id: number,
     title: String,
     description: String,
     view_code: String,
