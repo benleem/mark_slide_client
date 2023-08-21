@@ -21,7 +21,7 @@
             class="fixed top-0 left-0 h-full w-full"
             on:click={() => modal = false}
         ></div>
-        <div class="relative max-h-[95%] max-w-md w-full p-4 overflow-scroll bg-gray-700 rounded-md">
+        <div class="relative max-h-[95%] max-w-md w-full overflow-scroll">
             <slot/>
         </div>
     </div>
