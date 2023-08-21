@@ -31,14 +31,13 @@
     </div>
 
     <div class="w-fit ml-auto p-10 flex-grow justify-end">
-        <!-- this button  -->
         <button on:click={toggleRenderMarkdown} class="self-end">
             {renderMarkdown ? 'Hide Markdown' : 'Show Markdown'}
         </button>
         {#if renderMarkdown}
             {@html marked(slides[selectedSlideIdx].content)}
         {:else}
-            <p>{slides[selectedSlideIdx].content}</p>
+            <textarea bind:value={slides[selectedSlideIdx].content} class="text-black"></textarea>
         {/if}
     </div>
 
