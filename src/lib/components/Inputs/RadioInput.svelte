@@ -5,7 +5,7 @@
     export let group:string | boolean
 </script>
 
-<label>
+<label class="text-sm">
     <input type="radio" name={name} value={value} bind:group/>
     {label}
 </label>
