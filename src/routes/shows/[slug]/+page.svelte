@@ -26,7 +26,11 @@
     {#await getShowSlides(data.token, data.slug)}
          <p>Loading</p>
     {:then response}
+    {#if response.slides.length == 0}
+        <p>No slides</p>
+    {:else}
         <SlideView slides={response.slides}/>
+    {/if}
     {:catch error}
         <p>Something went wrong: {error}</p>
     {/await}

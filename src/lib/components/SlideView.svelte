@@ -1,44 +1,101 @@
 <script lang="ts">
-    import type { Slide } from "$lib/models/slides";
+    import  type {CreateSlideData, Slide, DeleteSlideParams, SlideFormData } from "$lib/models/slides";
     import { marked } from 'marked';
+    import { writable } from 'svelte/store';
+	import { addSlideToShow, removeSlideFromShow, patchSlide } from '$lib/utils/api/slides';
     
     export let slides: Slide[]
-
-    let selectedSlideIdx: number = 0;
     let renderMarkdown: boolean = true;
+
+    // let selectedSlide: Slide = slides[0];
+    let selectedSlide = writable<Slide>(slides[0]);
+    // let selectedSlideContent = writable<string>("");
+
+    // function orderSlides(slides: Slide[]): Slide[] {
+    //     const orderedSlides = slides.slice().sort((a, b) => a.index_number - b.index_number);
+    //     return orderedSlides;
+    // }
 
     function toggleRenderMarkdown() {
         renderMarkdown = !renderMarkdown
-        
     }
 
     function changeSelectedSlide(i: number) {
-        selectedSlideIdx = i;
+        selectedSlide.set(slides[i]);
     }
+
+    async function saveChangesToSlides(slides: Slide[]) {
+        for (const [index, slide] of slides.entries()) {
+            let editSlideData: SlideFormData = { id: slide.id, index_number: index, content: slide.content }
+            await patchSlide(editSlideData);    
+        }
+        // selectedSlideContent.set(slide.content);
+    }
+
+    async function createNewSlide() {
+        let createSlideBody: CreateSlideData = {show_id: slides[0].show_id, content: "", index_number: slides.length};
+        addSlideToShow(createSlideBody);
+    }
+
+    async function deleteSelectedSlide() {
+        let slide =  $selectedSlide;
+        let deleteSelectedSlideParams: DeleteSlideParams = { id: slide.id, user_id: slide.user_id, show_id: slide.show_id };
+        await removeSlideFromShow(deleteSelectedSlideParams);
+    }
+
+    $: {
+        console.log("Selected slide content changed:", $selectedSlide.content);
+    }
+
 </script>
 
 
-<section class="flex">
-    <div class="flex-none flex-row p-5 inline">
-        {#each slides as slide, i}
-            <div on:click={() => changeSelectedSlide(i)} class="hover:cursor-pointer hover:text-blue-200">
-                <h1>{slide.show_id}</h1>
-                <p>{slide.user_id}</p>
-                <p>{slide.created_at}</p>
-                <p>{slide.updated_at}</p>
-             </div>
-        {/each}
-    </div>
+<style>
+    .edit-markdown-box {
+        width: 100%;
+        height: 100%;
+        outline: none;
+        resize: none;
+        overflow: auto;
+    }
+</style>
 
-    <div class="w-fit ml-auto p-10 flex-grow justify-end">
-        <button on:click={toggleRenderMarkdown} class="self-end">
-            {renderMarkdown ? 'Hide Markdown' : 'Show Markdown'}
-        </button>
-        {#if renderMarkdown}
-            {@html marked(slides[selectedSlideIdx].content)}
-        {:else}
-            <textarea bind:value={slides[selectedSlideIdx].content} class="text-black"></textarea>
-        {/if}
-    </div>
+<section>
+    <ul class="flex  justify-end place-items-end gap-4 p-5">
+        <li>
+            <button on:click={async () => await deleteSelectedSlide()}>Remove Current Slide: {$selectedSlide.index_number}</button>
+        </li>
+        <li>|</li>
+        <li>
+            <button on:click={async () => await saveChangesToSlides(slides)}>Save</button>
+        </li>
+    </ul>
 
+    <section class="flex">
+        <div class="flex-none flex-row p-5 inline">
+            {#if slides.length > 0}
+            {#each slides as slide, i}
+                <div on:click={() => changeSelectedSlide(i)} class="hover:cursor-pointer hover:text-blue-200">
+                    <h1>Slide {i} : {slide.index_number}</h1>
+                </div>
+            {/each}
+            {/if}
+            <button on:click={async () => await createNewSlide()}>ADD SLIDE</button>
+        </div>
+
+        <div class="w-fit ml-auto p-10 flex-grow justify-end">
+            <button on:click={toggleRenderMarkdown} class="self-end">
+                {renderMarkdown ? 'Hide Markdown' : 'Show Markdown'}
+            </button>
+            <div class="prose">
+            {#if renderMarkdown}
+                {@html marked($selectedSlide.content)}
+                <!-- {@html marked(mdtest)} -->
+            {:else}
+                <textarea bind:value={$selectedSlide.content} class="edit-markdown-box text-black"></textarea>
+            {/if}
+            </div>
+        </div>
+
+    </section>
 </section>
