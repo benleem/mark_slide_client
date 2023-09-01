@@ -24,7 +24,13 @@
         selectedSlide.set(slides[i]);
     }
 
-    async function saveChangesToSlides(slides: Slide[]) {
+
+    async function saveChangesToSlide(slide: Slide) {
+        let editSlideData: SlideFormData = { id: slide.id, index_number: slide.index_number, content: slide.content }
+        await patchSlide(editSlideData);    
+    }
+
+    async function saveChangesToAllSlides(slides: Slide[]) {
         for (const [index, slide] of slides.entries()) {
             let editSlideData: SlideFormData = { id: slide.id, index_number: index, content: slide.content }
             await patchSlide(editSlideData);    
@@ -67,7 +73,11 @@
         </li>
         <li>|</li>
         <li>
-            <button on:click={async () => await saveChangesToSlides(slides)}>Save</button>
+            <button on:click={async () => await saveChangesToSlide($selectedSlide)}>Save Selected</button>
+        </li>
+        <li>|</li>
+        <li>
+            <button on:click={async () => await saveChangesToAllSlides(slides)}>Save All</button>
         </li>
     </ul>
 
