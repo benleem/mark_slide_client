@@ -1,5 +1,5 @@
 import { PUBLIC_API_BASE_URL } from "$env/static/public";
-import type { CreateSlideData, Slide, DeleteSlideParams, SlideFormData } from "$lib/models/slides";
+import type { CreateSlideData, Slide, DeleteSlideParams, SlideFormData, UpdateSlideData } from "$lib/models/slides";
 
 export const getShowSlides = async (
     token: string,
@@ -125,22 +125,22 @@ export const removeSlideFromShow = async (
 };
 
 export const patchSlide = async (
-	slideFormData: SlideFormData,
+	updateSlideData: UpdateSlideData,
+    slideId: string,
 ): Promise<{
 	slide: Slide | null;
 	status: string;
 }> => {
 	try {
-		const response = await fetch(`${PUBLIC_API_BASE_URL}/slides/${slideFormData.id}`, {
+		const response = await fetch(`${PUBLIC_API_BASE_URL}/slides/${slideId}`, {
 			method: "PATCH",
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(slideFormData)
+			body: JSON.stringify(updateSlideData)
 		});
 		const responseJson = await response.json();
-        console.log(responseJson)
 
 		if (responseJson.status !== "success") {
 			return {

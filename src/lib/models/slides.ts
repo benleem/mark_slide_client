@@ -9,8 +9,7 @@ export type Slide = {
 	updated_at: Date;
 };
 
-export type SlideFormData = {
-    id: string;
+export type UpdateSlideData = {
     index_number: number;
     content: string;
 }

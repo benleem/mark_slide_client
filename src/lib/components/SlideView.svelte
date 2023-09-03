@@ -1,5 +1,5 @@
 <script lang="ts">
-    import  type {CreateSlideData, Slide, DeleteSlideParams, SlideFormData } from "$lib/models/slides";
+    import  type {CreateSlideData, Slide, DeleteSlideParams, UpdateSlideData } from "$lib/models/slides";
     import { marked } from 'marked';
     import { writable } from 'svelte/store';
 	import { addSlideToShow, removeSlideFromShow, patchSlide } from '$lib/utils/api/slides';
@@ -24,18 +24,16 @@
         selectedSlide.set(slides[i]);
     }
 
-
     async function saveChangesToSlide(slide: Slide) {
-        let editSlideData: SlideFormData = { id: slide.id, index_number: slide.index_number, content: slide.content }
-        await patchSlide(editSlideData);    
+        let editSlideData: UpdateSlideData = { index_number: slide.index_number, content: slide.content }
+        await patchSlide(editSlideData, slide.id);    
     }
 
     async function saveChangesToAllSlides(slides: Slide[]) {
         for (const [index, slide] of slides.entries()) {
-            let editSlideData: SlideFormData = { id: slide.id, index_number: index, content: slide.content }
-            await patchSlide(editSlideData);    
+            let editSlideData: UpdateSlideData = { index_number: index, content: slide.content }
+            await patchSlide(editSlideData, slide.id);    
         }
-        // selectedSlideContent.set(slide.content);
     }
 
     async function createNewSlide() {
@@ -60,6 +58,7 @@
     .edit-markdown-box {
         width: 100%;
         height: 100%;
+        flex: 1;
         outline: none;
         resize: none;
         overflow: auto;
@@ -94,10 +93,10 @@
         </div>
 
         <div class="w-fit ml-auto p-10 flex-grow justify-end">
-            <button on:click={toggleRenderMarkdown} class="self-end">
-                {renderMarkdown ? 'Hide Markdown' : 'Show Markdown'}
-            </button>
-            <div class="prose">
+            <!-- <button on:click={toggleRenderMarkdown} class="self-end"> -->
+            <!--     {renderMarkdown ? 'Hide Markdown' : 'Show Markdown'} -->
+            <!-- </button> -->
+            <div class="prose" on:dblclick={toggleRenderMarkdown}>
             {#if renderMarkdown}
                 {@html marked($selectedSlide.content)}
                 <!-- {@html marked(mdtest)} -->
