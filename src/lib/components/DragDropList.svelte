@@ -1,10 +1,13 @@
 <script lang="ts">
     import { flip } from "svelte/animate";
-    import  type {Slide} from "$lib/models/slides";
+    import { writable } from 'svelte/store';
+	import { addSlideToShow, removeSlideFromShow, patchSlide } from '$lib/utils/api/slides';
+    import  type {CreateSlideData, Slide, DeleteSlideParams, UpdateSlideData } from "$lib/models/slides";
 
     // Define the types for your properties and local variables
-    export let data: Slide[] = []; // Array of any type
-    export let removesItems: boolean = false;
+    export let data: Slide[] = []; 
+    export let removesItems: boolean = true;
+    export let selectedSlide = writable<Slide>(undefined);
 
     let ghost: HTMLDivElement | undefined;
     let grabbed: HTMLDivElement | undefined;
@@ -14,6 +17,27 @@
     let mouseY: number = 0;
     let offsetY: number = 0;
     let layerY: number = 0;
+
+
+    async function saveChangesToSlide(slide: Slide) {
+        let editSlideData: UpdateSlideData = { index_number: slide.index_number, content: slide.content }
+        await patchSlide(editSlideData, slide.id);    
+    }
+
+    async function deleteSlide(slide: Slide) {
+        let deleteSelectedSlideParams: DeleteSlideParams = { id: slide.id, user_id: slide.user_id, show_id: slide.show_id };
+        await removeSlideFromShow(deleteSelectedSlideParams);
+    }
+
+    async function createNewSlide() {
+        let createSlideBody: CreateSlideData = {show_id: data[0].show_id, content: "", index_number: data.length};
+        addSlideToShow(createSlideBody);
+    }
+
+    function changeSelectedSlide(i: number) {
+        selectedSlide.set(data[i]);
+    }
+
 
     function grab(clientY: number, element: HTMLDivElement) {
         // modify grabbed element
@@ -55,6 +79,10 @@
 
     function moveDatum(from: number, to: number) {
         let temp = data[from];
+        temp.index_number = to;
+        data[to].index_number = from;
+        saveChangesToSlide(temp);
+        saveChangesToSlide(data[to]);
         data = [...data.slice(0, from), ...data.slice(from + 1)];
         data = [...data.slice(0, to), temp, ...data.slice(to)];
     }
@@ -64,6 +92,7 @@
     }
 
     function removeDatum(index: number) {
+        deleteSlide(data[index]);
         data = [...data.slice(0, index), ...data.slice(index + 1)];
     }
 </script>
@@ -88,9 +117,9 @@
         width: 100%;
         min-height: 3em;
         margin-bottom: 0.5em;
-        background-color: white;
-        border: 1px solid rgb(190, 190, 190);
-        border-radius: 2px;
+        background-color: rgb(140, 140, 140);
+        border: 1px solid rgb(140, 140, 140);
+        border-radius: 10px;
         user-select: none;
     }
 
@@ -188,6 +217,7 @@
                 on:touchstart={function(ev) {grab(ev.touches[0].clientY, this);}}
                 on:mouseenter={function(ev) {ev.stopPropagation(); dragEnter(ev, ev.target);}}
                 on:touchmove={function(ev) {ev.stopPropagation(); ev.preventDefault(); touchEnter(ev.touches[0]);}}
+                on:click={() => changeSelectedSlide(i)} 
                 animate:flip|local={{duration: 200}}>
                 <div class="buttons">
                     <button 
@@ -205,7 +235,7 @@
                 </div>
 
                 <div class="content">
-                    <p>{datum.content}</p>
+                    <p>Slide: {datum.index_number}</p>
                 </div>
 
                 <div class="buttons delete">
@@ -219,4 +249,6 @@
             </div>
         {/each}
     </div>
+
+    <button on:click={async () => await createNewSlide()}>ADD SLIDE</button>
 </main>

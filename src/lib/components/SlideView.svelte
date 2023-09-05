@@ -6,7 +6,9 @@
 	import { addSlideToShow, removeSlideFromShow, patchSlide } from '$lib/utils/api/slides';
     
     export let slides: Slide[]
+
     let renderMarkdown: boolean = true;
+
 
     // let selectedSlide: Slide = slides[0];
     let selectedSlide = writable<Slide>(slides[0]);
@@ -20,6 +22,12 @@
     function clickSlideContent(slide: Slide) {
         toggleRenderMarkdown();
         saveChangesToSlide(slide);
+    }
+
+
+    async function saveChangesToSlide(slide: Slide) {
+        let editSlideData: UpdateSlideData = { index_number: slide.index_number, content: slide.content }
+        await patchSlide(editSlideData, slide.id);    
     }
 
     function toggleRenderMarkdown() {
@@ -48,33 +56,6 @@
         textarea.addEventListener('input', autoResizeTextarea);
     }
 
-    function changeSelectedSlide(i: number) {
-        selectedSlide.set(slides[i]);
-    }
-
-    async function saveChangesToSlide(slide: Slide) {
-        let editSlideData: UpdateSlideData = { index_number: slide.index_number, content: slide.content }
-        await patchSlide(editSlideData, slide.id);    
-    }
-
-    async function saveChangesToAllSlides(slides: Slide[]) {
-        for (const [index, slide] of slides.entries()) {
-            let editSlideData: UpdateSlideData = { index_number: index, content: slide.content }
-            await patchSlide(editSlideData, slide.id);    
-        }
-    }
-
-    async function createNewSlide() {
-        let createSlideBody: CreateSlideData = {show_id: slides[0].show_id, content: "", index_number: slides.length};
-        addSlideToShow(createSlideBody);
-    }
-
-    async function deleteSelectedSlide() {
-        let slide =  $selectedSlide;
-        let deleteSelectedSlideParams: DeleteSlideParams = { id: slide.id, user_id: slide.user_id, show_id: slide.show_id };
-        await removeSlideFromShow(deleteSelectedSlideParams);
-    }
-
     $: {
         console.log("Selected slide content changed:", $selectedSlide.content);
         autoResizeTextarea();
@@ -83,27 +64,16 @@
 </script>
 
 <section>
-    <ul class="flex  justify-end place-items-end gap-4 p-5">
-        <li>
-            <button on:click={async () => await deleteSelectedSlide()}>Remove Current Slide: {$selectedSlide.index_number}</button>
-        </li>
-        <li>|</li>
-        <li>
-            <button on:click={async () => await saveChangesToAllSlides(slides)}>Save All</button>
-        </li>
-    </ul>
-
     <section class="flex">
         <div class="flex-none flex-row p-5 inline">
             {#if slides.length > 0}
-            {#each slides as slide, i}
-                <div on:click={() => changeSelectedSlide(i)} class="hover:cursor-pointer hover:text-blue-200">
-                    <h1>Slide {i} : {slide.index_number}</h1>
-                </div>
-            {/each}
-                <!-- <DragDropList bind:data={slides}/> -->
+            <!-- {#each slides as slide, i} -->
+            <!--     <div on:click={() => changeSelectedSlide(i)} class="hover:cursor-pointer hover:text-blue-200"> -->
+            <!--         <h1>Slide {i} : {slide.index_number}</h1> -->
+            <!--     </div> -->
+            <!-- {/each} -->
+                <DragDropList bind:data={slides} {selectedSlide} />
             {/if}
-            <button on:click={async () => await createNewSlide()}>ADD SLIDE</button>
         </div>
 
         <div class="w-fit ml-auto p-10 flex-grow justify-end">
