@@ -5,7 +5,6 @@
 	import RadioInput from "./Inputs/RadioInput.svelte"
 	import { deleteShow, patchShow, postShow } from "$lib/utils/api/shows";
 
-    export let shows: Show[]
     export let mode: "add" | "edit" | "delete" 
     export let modal: boolean
     export let show: Show
@@ -18,7 +17,6 @@
         description:  show.description ,
         view_code: show.view_code ,
         public: show.public
-        
     }
 
     const handleSubmit = async() => {
@@ -32,7 +30,6 @@
                 goto(`/shows/${response.show.id}`)
             }
             // update shows store
-            shows = [response.show]
             modal = false
         }
         formLoading = false

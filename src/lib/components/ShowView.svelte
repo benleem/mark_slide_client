@@ -84,5 +84,5 @@
     {/each}
 </section>
 <ModalContainer bind:modal={isModalActive}>
-    <ShowForm bind:shows={shows} mode={mode} show={show} bind:modal={isModalActive}/>
+    <ShowForm mode={mode} show={show} bind:modal={isModalActive}/>
 </ModalContainer>

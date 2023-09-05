@@ -6,16 +6,16 @@
     import { convertTime } from '$lib/utils/helpers';
     import ProfileItem from '$lib/components/ProfileItem.svelte';
 	import { getUserShows } from '$lib/utils/api/shows';
+	import { shows } from '../../store';
     
     export let data: PageData
 
-    const {user, token} = data
-    const tokenString = token as string
+    const {user} = data
 
     const logout = async() => {
         const response = await fetch(`${PUBLIC_API_BASE_URL}/auth/logout`,{
-            credentials:"include", 
-            headers:{"Authorization":`Bearer ${data.token}`}});
+            credentials:"include"}
+        );
         const responseJson = await response.json();
         if (responseJson.status === "success") {
                 goto("/")
@@ -39,14 +39,14 @@
                 <ProfileItem label="Name" value={data.user.name}/>
                 <ProfileItem label="Username" value={data.user.username}/>
                 <ProfileItem label="Email" value={data.user.email || "N/A"}/>
-                <ProfileItem label="Created" value={convertTime(data.user.created_at)}/>
-                <ProfileItem label="Updated" value={convertTime(data.user.updated_at)}/>
+                <ProfileItem label="Created" value={data.user.created_at ?  convertTime(data.user.created_at)  : "N/A"}/>
+                <ProfileItem label="Updated" value={data.user.created_at ?  convertTime(data.user.created_at)  : "N/A"}/>
             </div>
             <button class="material-symbols-outlined text-blue-600 hover:text-blue-500 transition-colors duration-200 ease-in-out" on:click={logout}>logout</button>
         </div>
     </section>
     <section class="pt-8">
-        {#await getUserShows(user.id, tokenString, false)}
+        {#await getUserShows(user.id, false)}
             <p class="mx-auto max-w-5xl">Loading</p>
         {:then shows}
             <ShowView shows={shows.shows}/>
@@ -54,8 +54,8 @@
             <p class="mx-auto max-w-5xl">Something went wrong:{error}</p>
         {/await}
     </section>
-{:else if !data.user || data.error}
+{:else if !data.user}
     <section class="mx-auto max-w-5xl h-full flex items-center justify-center">
-        <p class="text-red-500">{data.error}</p>
+        <p class="text-red-500">You are not logged in</p>
     </section>
 {/if}

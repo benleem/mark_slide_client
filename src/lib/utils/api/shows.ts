@@ -36,7 +36,6 @@ export const getAllShows = async (): Promise<{
 
 export const getUserShows = async (
 	userId: number,
-	token: string,
 	favorites: boolean
 ): Promise<{
 	shows: Show[];
@@ -45,9 +44,7 @@ export const getUserShows = async (
 	try {
 		const response = await fetch(
 			`${PUBLIC_API_BASE_URL}/shows/users/${userId}?favorites=${favorites}`,
-			{
-				credentials: "include"
-			}
+			{ credentials: "include" }
 		);
 		const responseJson = await response.json();
 
@@ -107,7 +104,6 @@ export const postShow = async (
 	try {
 		const response = await fetch(`${PUBLIC_API_BASE_URL}/shows`, {
 			method: "POST",
-			credentials: "include",
 			headers: {
 				"Content-Type": "application/json"
 			},
@@ -150,7 +146,6 @@ export const patchShow = async (
 	try {
 		const response = await fetch(`${PUBLIC_API_BASE_URL}/shows/${showId}`, {
 			method: "PATCH",
-			credentials: "include",
 			headers: {
 				"Content-Type": "application/json"
 			},
@@ -191,8 +186,8 @@ export const deleteShow = async (
 }> => {
 	try {
 		const response = await fetch(`${PUBLIC_API_BASE_URL}/shows/${showId}`, {
-			method: "DELETE",
-			credentials: "include"
+			credentials: "include",
+			method: "DELETE"
 		});
 		const responseJson = await response.json();
 

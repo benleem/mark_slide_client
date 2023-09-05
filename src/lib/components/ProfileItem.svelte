@@ -1,6 +1,6 @@
 <script lang="ts">
-    export let label:string
-    export let value:string
+    export let label:string | number
+    export let value:string | number
 </script>
 
 <p class="text-white"> 

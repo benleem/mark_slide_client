@@ -8,7 +8,7 @@
     const getLoginUrl = async() => {
         isLoading = true
         try {
-            const response = await fetch(`${PUBLIC_API_BASE_URL}/auth/login`, {})
+            const response = await fetch(`${PUBLIC_API_BASE_URL}/auth/login`,)
             const responseJson = await response.json()
             
             if (!responseJson.data) {
