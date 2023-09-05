@@ -1,5 +1,6 @@
 <script lang="ts">
     import  type {CreateSlideData, Slide, DeleteSlideParams, UpdateSlideData } from "$lib/models/slides";
+    import DragDropList from "./DragDropList.svelte";
     import { marked } from 'marked';
     import { writable } from 'svelte/store';
 	import { addSlideToShow, removeSlideFromShow, patchSlide } from '$lib/utils/api/slides';
@@ -16,8 +17,35 @@
     //     return orderedSlides;
     // }
 
+    function clickSlideContent(slide: Slide) {
+        toggleRenderMarkdown();
+        saveChangesToSlide(slide);
+    }
+
     function toggleRenderMarkdown() {
         renderMarkdown = !renderMarkdown
+        if (!renderMarkdown) {
+            setTimeout(() => {
+                    const textarea = document.getElementById('edit-content-area');
+                    textarea?.focus();
+                    autoResizeTextarea();
+                }, 0);
+        }
+
+    }
+
+    function autoResizeTextarea() {
+        const textarea = document.getElementById('edit-content-area');
+        if (textarea) {
+            textarea.style.height = 'auto'; // Reset the height to auto
+            textarea.style.height = textarea.scrollHeight + 'px'; // Set the height to match the content
+        }
+    }
+
+    // Listen for input changes in the textarea
+    const textarea = document.getElementById('edit-content-area');
+    if (textarea) {
+        textarea.addEventListener('input', autoResizeTextarea);
     }
 
     function changeSelectedSlide(i: number) {
@@ -49,30 +77,15 @@
 
     $: {
         console.log("Selected slide content changed:", $selectedSlide.content);
+        autoResizeTextarea();
     }
 
 </script>
-
-
-<style>
-    .edit-markdown-box {
-        width: 100%;
-        height: 100%;
-        flex: 1;
-        outline: none;
-        resize: none;
-        overflow: auto;
-    }
-</style>
 
 <section>
     <ul class="flex  justify-end place-items-end gap-4 p-5">
         <li>
             <button on:click={async () => await deleteSelectedSlide()}>Remove Current Slide: {$selectedSlide.index_number}</button>
-        </li>
-        <li>|</li>
-        <li>
-            <button on:click={async () => await saveChangesToSlide($selectedSlide)}>Save Selected</button>
         </li>
         <li>|</li>
         <li>
@@ -88,20 +101,21 @@
                     <h1>Slide {i} : {slide.index_number}</h1>
                 </div>
             {/each}
+                <!-- <DragDropList bind:data={slides}/> -->
             {/if}
             <button on:click={async () => await createNewSlide()}>ADD SLIDE</button>
         </div>
 
         <div class="w-fit ml-auto p-10 flex-grow justify-end">
-            <!-- <button on:click={toggleRenderMarkdown} class="self-end"> -->
-            <!--     {renderMarkdown ? 'Hide Markdown' : 'Show Markdown'} -->
-            <!-- </button> -->
-            <div class="prose" on:dblclick={toggleRenderMarkdown}>
+            <div class="prose max-w-none w-full" >
             {#if renderMarkdown}
-                {@html marked($selectedSlide.content)}
+                <div on:dblclick={() => clickSlideContent($selectedSlide)}>
+                    {@html marked($selectedSlide.content)}
+                </div>
+
                 <!-- {@html marked(mdtest)} -->
             {:else}
-                <textarea bind:value={$selectedSlide.content} class="edit-markdown-box text-black"></textarea>
+                <textarea id="edit-content-area" bind:value={$selectedSlide.content} on:blur={() => clickSlideContent($selectedSlide)} class="block p-2.5 w-full h-full text-md text-gray-900 bg-gray-50 overflow-hidden rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 resize-none"></textarea>
             {/if}
             </div>
         </div>
