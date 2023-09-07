@@ -30,7 +30,7 @@
     }
 
     async function createNewSlide() {
-        let createSlideBody: CreateSlideData = {show_id: data[0].show_id, content: "", index_number: data.length};
+        let createSlideBody: CreateSlideData = {show_id: data[0].show_id, content: "Click to edit....", index_number: data.length};
         addSlideToShow(createSlideBody);
     }
 
@@ -248,7 +248,7 @@
                 </div>
             </div>
         {/each}
+        <button class="rounded-lg text-center p-2 bg-white font-bold hover:bg-black hover:text-white ease-in-out duration-200" on:click={async () => await createNewSlide()}>+</button>
     </div>
 
-    <button on:click={async () => await createNewSlide()}>ADD SLIDE</button>
 </main>
