@@ -59,6 +59,11 @@
     $: {
         console.log("Selected slide content changed:", $selectedSlide.content);
         autoResizeTextarea();
+        if ($selectedSlide.content == "") {
+            renderMarkdown = false;
+        } else {
+            renderMarkdown = true;
+        }
     }
 
 </script>

@@ -30,11 +30,12 @@
     }
 
     async function createNewSlide() {
-        let createSlideBody: CreateSlideData = {show_id: data[0].show_id, content: "Click to edit....", index_number: data.length};
+        let createSlideBody: CreateSlideData = {show_id: data[0].show_id, content: "", index_number: data.length};
         addSlideToShow(createSlideBody);
     }
 
     function changeSelectedSlide(i: number) {
+        /// ADD A CHECK FOR WHETHER THERE IS CONTENT IN THE SLIDE, IF NOT MAKE RENDER MARKDOWN = FALSE
         selectedSlide.set(data[i]);
     }
 
