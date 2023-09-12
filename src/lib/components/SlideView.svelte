@@ -1,9 +1,9 @@
 <script lang="ts">
-    import  type {CreateSlideData, Slide, DeleteSlideParams, UpdateSlideData } from "$lib/models/slides";
+    import  type { Slide, UpdateSlideData } from "$lib/models/slides";
     import DragDropList from "./DragDropList.svelte";
     import { marked } from 'marked';
     import { writable } from 'svelte/store';
-	import { addSlideToShow, removeSlideFromShow, patchSlide } from '$lib/utils/api/slides';
+	import { patchSlide } from '$lib/utils/api/slides';
     
     export let slides: Slide[]
 
@@ -45,12 +45,11 @@
     function autoResizeTextarea() {
         const textarea = document.getElementById('edit-content-area');
         if (textarea) {
-            textarea.style.height = 'auto'; // Reset the height to auto
-            textarea.style.height = textarea.scrollHeight + 'px'; // Set the height to match the content
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
         }
     }
 
-    // Listen for input changes in the textarea
     const textarea = document.getElementById('edit-content-area');
     if (textarea) {
         textarea.addEventListener('input', autoResizeTextarea);
