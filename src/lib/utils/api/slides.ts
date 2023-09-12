@@ -75,7 +75,7 @@ export const addSlideToShow = async (
             };
         }
         return {
-            slide: null,
+            slides: null,
             status: error as string
         };
     }
