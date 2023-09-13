@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { Show, ShowFormData } from "$lib/models/shows";
 	import { goto } from "$app/navigation"
+	import { deleteShow, patchShow, postShow } from "$lib/utils/api/shows";
+    import { shows } from "$lib/stores/shows";
 	import TextInput from "./Inputs/TextInput.svelte"
 	import RadioInput from "./Inputs/RadioInput.svelte"
-	import { deleteShow, patchShow, postShow } from "$lib/utils/api/shows";
 
     export let mode: "add" | "edit" | "delete" 
     export let modal: boolean
@@ -26,10 +27,20 @@
             formError = response.status
         }
         if (response.show){
+            const showResponse = response.show as Show
             if (mode === "add") {
-                goto(`/shows/${response.show.id}`)
+                goto(`/shows/${showResponse.id}`)
             }
-            // update shows store
+            if (mode === "edit") {
+                shows.update(shows => {
+                    shows.forEach((show: Show, i) => { 
+                        if (show.id === showResponse.id) {
+                            shows[i] = showResponse;
+                        }
+                    })
+                    return shows
+                })
+            }
             modal = false
         }
         formLoading = false
@@ -42,7 +53,11 @@
             formError = response.status
         }
         if (response.show){
-            // update shows store
+            const showId = response.show
+            shows.update(shows => {
+                const updatedShows = shows.filter((show: Show) => show.id !== showId )
+                return updatedShows
+            })
             modal = false
         }
         formLoading = false
@@ -50,8 +65,7 @@
 </script>
 
 <style>
-    /* Close Icon */
-    @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"); 
+
 </style>
 
 {#if mode === "delete"}

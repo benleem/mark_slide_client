@@ -1,10 +1,9 @@
 import type { PageServerLoad } from "./$types";
-import { PUBLIC_API_BASE_URL } from "$env/static/public";
+import { getInitialUserShows } from "$lib/utils/api/shows";
 
-export const load: PageServerLoad = async ({ fetch, cookies, locals }) => {
-	console.log(locals.user);
-
+export const load: PageServerLoad = async (event) => {
 	return {
-		user: locals.user
+		user: event.locals.user,
+		initialShows: getInitialUserShows(event, event.locals.user.id, false)
 	};
 };

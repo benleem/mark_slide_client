@@ -1,11 +1,10 @@
 <script lang="ts">
-    import { convertTime} from "$lib/utils/helpers";
     import type { Show } from "$lib/models/shows";
-
+    import { shows } from "$lib/stores/shows";
+    import { convertTime} from "$lib/utils/helpers";
     import ShowForm from '$lib/components/ShowForm.svelte';
     import ModalContainer from '$lib/components/ModalContainer.svelte';
-    
-    export let shows: Show[]
+
     let isModalActive = false
     let mode: "add" | "edit" | "delete" = "add"
     let show: Show = {
@@ -46,7 +45,7 @@
 </style>
 
 <section class="mx-auto grid grid-cols-3 gap-8 max-w-5xl">
-    {#each shows as showItem}
+    {#each $shows as showItem}
         <div class="h-min aspect-video">
             <div class="relative h-full [&>a]:!text-white">
                 <a href={`/shows/${showItem.id}`} class="block h-full bg-[#121212] rounded-md group">
