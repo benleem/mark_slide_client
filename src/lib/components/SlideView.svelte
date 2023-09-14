@@ -6,24 +6,15 @@
 	import { patchSlide } from '$lib/utils/api/slides';
     
     export let slides: Slide[]
-
     let renderMarkdown: boolean = true;
-
-
-    // let selectedSlide: Slide = slides[0];
     let selectedSlide = writable<Slide>(slides[0]);
-    // let selectedSlideContent = writable<string>("");
-
-    // function orderSlides(slides: Slide[]): Slide[] {
-    //     const orderedSlides = slides.slice().sort((a, b) => a.index_number - b.index_number);
-    //     return orderedSlides;
-    // }
 
     function clickSlideContent(slide: Slide) {
-        toggleRenderMarkdown();
+        if (slide.content != "") {
+            toggleRenderMarkdown();
+        }
         saveChangesToSlide(slide);
     }
-
 
     async function saveChangesToSlide(slide: Slide) {
         let editSlideData: UpdateSlideData = { index_number: slide.index_number, content: slide.content }
@@ -39,7 +30,6 @@
                     autoResizeTextarea();
                 }, 0);
         }
-
     }
 
     function autoResizeTextarea() {
@@ -71,11 +61,6 @@
     <section class="flex">
         <div class="flex-none flex-row p-5 inline">
             {#if slides.length > 0}
-            <!-- {#each slides as slide, i} -->
-            <!--     <div on:click={() => changeSelectedSlide(i)} class="hover:cursor-pointer hover:text-blue-200"> -->
-            <!--         <h1>Slide {i} : {slide.index_number}</h1> -->
-            <!--     </div> -->
-            <!-- {/each} -->
                 <DragDropList bind:data={slides} {selectedSlide} />
             {/if}
         </div>
@@ -93,6 +78,5 @@
             {/if}
             </div>
         </div>
-
     </section>
 </section>

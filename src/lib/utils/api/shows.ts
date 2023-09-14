@@ -76,27 +76,38 @@ export const getUserShows = async (
 	}
 };
 
-// export const getShowById = async () => {
-// 	try {
-// 		const response = await fetch(`${PUBLIC_API_BASE_URL}/shows`);
-// 		const responseJson = await response.json();
+export const getShowById = async (
+    showId: String,
+): Promise<{
+    show: Show | null;
+    status: String;
+}> => {
+	try {
+		const response = await fetch(`${PUBLIC_API_BASE_URL}/shows/${showId}`);
+		const responseJson = await response.json();
 
-// 		if (!responseJson.data) {
-// 			return {
-// 				error: responseJson.message
-// 			};
-// 		}
+		if (!responseJson.data) {
+			return {
+                show: null,
+				status: responseJson.message
+			};
+		}
 
-// 		const shows = responseJson.data.shows;
-// 		return {
-// 			shows
-// 		};
-// 	} catch (error) {
-// 		if (error instanceof Error) {
-// 			return { error: error.message };
-// 		}
-// 	}
-// };
+		const show = responseJson.data.show;
+		return {
+			show,
+            status: "success"
+		};
+	} catch (error) {
+		if (error instanceof Error) {
+			return { show: null, status: error.message };
+		}
+	}
+    return { 
+        show: null, 
+        status: "unknown" 
+    };
+};
 
 export const postShow = async (
 	showFormData: ShowFormData
