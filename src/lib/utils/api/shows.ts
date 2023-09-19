@@ -12,7 +12,6 @@ export const getInitialShows = async (
 	try {
 		const response = await event.fetch(`${PUBLIC_API_BASE_URL}/shows`);
 		const responseJson = await response.json();
-
 		if (responseJson.status !== "success") {
 			return {
 				shows: [],
@@ -80,9 +79,8 @@ export const getInitialUserShows = async (
 	status: string;
 }> => {
 	try {
-		const response = await fetch(
-			`${PUBLIC_API_BASE_URL}/shows/users/${userId}?favorites=${favorites}`,
-			{ credentials: "include" }
+		const response = await event.fetch(
+			`${PUBLIC_API_BASE_URL}/shows/users/${userId}?favorites=${favorites}`
 		);
 		const responseJson = await response.json();
 
@@ -150,27 +148,42 @@ export const getInitialUserShows = async (
 // 	}
 // };
 
-// export const getShowById = async () => {
-// 	try {
-// 		const response = await fetch(`${PUBLIC_API_BASE_URL}/shows`);
-// 		const responseJson = await response.json();
-
-// 		if (!responseJson.data) {
-// 			return {
-// 				error: responseJson.message
-// 			};
-// 		}
-
-// 		const shows = responseJson.data.shows;
-// 		return {
-// 			shows
-// 		};
-// 	} catch (error) {
-// 		if (error instanceof Error) {
-// 			return { error: error.message };
-// 		}
-// 	}
-// };
+export const getShowById = async (
+	event: ServerLoadEvent<RouteParams, NonNullable<unknown>, string>,
+	showId: string
+): Promise<{
+	show: Show | null;
+	status: string;
+}> => {
+	try {
+		const response = await event.fetch(
+			`${PUBLIC_API_BASE_URL}/shows/${showId}`
+		);
+		const responseJson = await response.json();
+		if (responseJson.status !== "success") {
+			return {
+				show: null,
+				status: responseJson.message as string
+			};
+		}
+		const show: Show = responseJson.data.show;
+		return {
+			show,
+			status: responseJson.message as string
+		};
+	} catch (error) {
+		if (error instanceof Error) {
+			return {
+				show: null,
+				status: error.message as string
+			};
+		}
+		return {
+			show: null,
+			status: error as string
+		};
+	}
+};
 
 export const postShow = async (
 	showFormData: ShowFormData

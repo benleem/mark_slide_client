@@ -35,6 +35,7 @@
     }
 
     function changeSelectedSlide(i: number) {
+        /// ADD A CHECK FOR WHETHER THERE IS CONTENT IN THE SLIDE, IF NOT MAKE RENDER MARKDOWN = FALSE
         selectedSlide.set(data[i]);
     }
 
@@ -248,7 +249,7 @@
                 </div>
             </div>
         {/each}
+        <button class="rounded-lg text-center p-2 bg-white font-bold hover:bg-black hover:text-white ease-in-out duration-200" on:click={async () => await createNewSlide()}>+</button>
     </div>
 
-    <button on:click={async () => await createNewSlide()}>ADD SLIDE</button>
 </main>

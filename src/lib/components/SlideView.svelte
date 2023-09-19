@@ -1,29 +1,20 @@
 <script lang="ts">
-    import  type {CreateSlideData, Slide, DeleteSlideParams, UpdateSlideData } from "$lib/models/slides";
+    import  type { Slide, UpdateSlideData } from "$lib/models/slides";
     import DragDropList from "./DragDropList.svelte";
     import { marked } from 'marked';
     import { writable } from 'svelte/store';
-	import { addSlideToShow, removeSlideFromShow, patchSlide } from '$lib/utils/api/slides';
+	import { patchSlide } from '$lib/utils/api/slides';
     
     export let slides: Slide[]
-
     let renderMarkdown: boolean = true;
-
-
-    // let selectedSlide: Slide = slides[0];
     let selectedSlide = writable<Slide>(slides[0]);
-    // let selectedSlideContent = writable<string>("");
-
-    // function orderSlides(slides: Slide[]): Slide[] {
-    //     const orderedSlides = slides.slice().sort((a, b) => a.index_number - b.index_number);
-    //     return orderedSlides;
-    // }
 
     function clickSlideContent(slide: Slide) {
-        toggleRenderMarkdown();
+        if (slide.content != "") {
+            toggleRenderMarkdown();
+        }
         saveChangesToSlide(slide);
     }
-
 
     async function saveChangesToSlide(slide: Slide) {
         let editSlideData: UpdateSlideData = { index_number: slide.index_number, content: slide.content }
@@ -39,18 +30,16 @@
                     autoResizeTextarea();
                 }, 0);
         }
-
     }
 
     function autoResizeTextarea() {
         const textarea = document.getElementById('edit-content-area');
         if (textarea) {
-            textarea.style.height = 'auto'; // Reset the height to auto
-            textarea.style.height = textarea.scrollHeight + 'px'; // Set the height to match the content
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
         }
     }
 
-    // Listen for input changes in the textarea
     const textarea = document.getElementById('edit-content-area');
     if (textarea) {
         textarea.addEventListener('input', autoResizeTextarea);
@@ -59,6 +48,11 @@
     $: {
         console.log("Selected slide content changed:", $selectedSlide.content);
         autoResizeTextarea();
+        if ($selectedSlide.content == "") {
+            renderMarkdown = false;
+        } else {
+            renderMarkdown = true;
+        }
     }
 
 </script>
@@ -67,11 +61,6 @@
     <section class="flex">
         <div class="flex-none flex-row p-5 inline">
             {#if slides.length > 0}
-            <!-- {#each slides as slide, i} -->
-            <!--     <div on:click={() => changeSelectedSlide(i)} class="hover:cursor-pointer hover:text-blue-200"> -->
-            <!--         <h1>Slide {i} : {slide.index_number}</h1> -->
-            <!--     </div> -->
-            <!-- {/each} -->
                 <DragDropList bind:data={slides} {selectedSlide} />
             {/if}
         </div>
@@ -89,6 +78,5 @@
             {/if}
             </div>
         </div>
-
     </section>
 </section>
