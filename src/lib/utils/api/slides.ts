@@ -46,7 +46,7 @@ export const getShowSlides = async (
 	}
 };
 
-export const addSlideToShow = async (createSlideData: CreateSlideData) => {
+export const addSlideToShow = async (createSlideData: CreateSlideData): Promise<{slides: Slide[] | null; status: string;}> => {
 	try {
 		const response = await fetch(`${PUBLIC_API_BASE_URL}/slides`, {
 			method: "POST",
@@ -86,7 +86,7 @@ export const addSlideToShow = async (createSlideData: CreateSlideData) => {
 
 export const removeSlideFromShow = async (
 	deleteSlideParams: DeleteSlideParams
-) => {
+): Promise<{slides: Slide[] | null; status: string;}> => {
 	try {
 		const response = await fetch(
 			`${PUBLIC_API_BASE_URL}/slides/${deleteSlideParams.id}`,
@@ -121,7 +121,7 @@ export const removeSlideFromShow = async (
 			};
 		}
 		return {
-			slide: null,
+			slides: null,
 			status: error as string
 		};
 	}
