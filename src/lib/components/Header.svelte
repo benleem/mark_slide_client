@@ -1,23 +1,22 @@
 <script lang="ts">
-    import ShowForm from '$lib/components/ShowForm.svelte';
-    import ModalContainer from '$lib/components/ModalContainer.svelte';
+    import type { ModalType } from "$lib/models/modal";
+	import { getModalActive } from "$lib/context/modal";
 
-    let isModalActive = false
-    let mode: "add" | "edit" | "delete" = "add"
-    let show = {
-        id: "",
-        user_id: 0,
-        title: "",
-        description: "",
-        view_code: "",
-        public: false,
-        created_at: "" as unknown as Date,
-        updated_at: "" as unknown as Date,
-    }
+    const modal = getModalActive()
 
-    const handleModalOpen = (modelMode:"add" | "edit" | "delete") => { 
-        isModalActive = true
-        mode = modelMode
+    const handleFormOpen = (modelType:ModalType) => {
+        $modal.active = true
+        $modal.type = modelType
+        $modal.data = {
+            id: "",
+            user_id: 0,
+            title: "",
+            description: "",
+            view_code: "",
+            public: false,
+            created_at: "" as unknown as Date,
+            updated_at: "" as unknown as Date,
+        }
     }
 </script>
 
@@ -34,11 +33,8 @@
                 <a href="/shows">Shows</a>
             </li>
             <li>
-                <button class="text-green-500" on:click={() => handleModalOpen("add")}>New</button>
+                <button class="text-green-500" on:click={() => handleFormOpen("show-add")}>New</button>
             </li>
         </ul>
     </nav>
 </header>
-<ModalContainer bind:modal={isModalActive}>
-    <ShowForm mode={mode} show={show} bind:modal={isModalActive}/>
-</ModalContainer>

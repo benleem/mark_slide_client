@@ -22,11 +22,6 @@
     }
 </script>
 
-<style>
-    /* Logout icon */
-    @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0");
-</style>
-
 {#if user}
     <section class="pb-8 mx-auto flex max-w-5xl border-b-2">
         <a href={user.profile_url}>

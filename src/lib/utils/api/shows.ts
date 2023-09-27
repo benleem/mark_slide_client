@@ -293,7 +293,7 @@ export const deleteShow = async (
 		const show: string = responseJson.data.show;
 		return {
 			show,
-			status: responseJson.message as string
+			status: responseJson.status as string
 		};
 	} catch (error) {
 		if (error instanceof Error) {

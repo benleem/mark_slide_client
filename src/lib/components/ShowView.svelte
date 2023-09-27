@@ -1,48 +1,18 @@
 <script lang="ts">
     import type { Show } from "$lib/models/shows";
+    import type { ModalType } from "$lib/models/modal";
     import { shows } from "$lib/stores/shows";
+    import { getModalActive } from "$lib/context/modal";
     import { convertTime} from "$lib/utils/helpers";
-    import ShowForm from '$lib/components/ShowForm.svelte';
-    import ModalContainer from '$lib/components/ModalContainer.svelte';
 
-    let isModalActive = false
-    let mode: "add" | "edit" | "delete" = "add"
-    let show: Show = {
-        id: "",
-        user_id: 0,
-        title: "",
-        description: "",
-        view_code: "",
-        public: false,
-        created_at: "" as unknown as Date,
-        updated_at: "" as unknown as Date,
-    }
+    const modal = getModalActive()
 
-    const handleModalOpen = (modelMode:"add" | "edit" | "delete", showItem: Show) => {
-        isModalActive = true
-        mode = modelMode
-        show = showItem
+    const handleFormOpen = (modelType:ModalType, showItem: Show) => {
+        $modal.active = true
+        $modal.type = modelType
+        $modal.data = showItem
     }
 </script>
-
-<style>
-    /* Edit Icon */
-    @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"); 
-    /* Delete Icon */
-    @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
-    /* Invisible Icon */
-    @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
-    /* Visible Icon */
-    @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
-
-    .material-symbols-outlined {
-      font-variation-settings:
-      'FILL' 0,
-      'wght' 400,
-      'GRAD' 0,
-      'opsz' 24,
-    }
-</style>
 
 <section class="mx-auto grid grid-cols-3 gap-8 max-w-5xl">
     {#each $shows as showItem}
@@ -54,13 +24,13 @@
                 </a>
                 <div class="absolute right-0 bottom-0 p-2 flex justify-end gap-1">
                     <button 
-                        on:click={() => handleModalOpen("edit", showItem)} 
+                        on:click={() => handleFormOpen("show-edit", showItem)} 
                         class="material-symbols-outlined p-1 bg-blue-600 text-white rounded-full hover:bg-blue-500 transition-all"
                     >
                         edit
                     </button>
                     <button 
-                        on:click={() => handleModalOpen("delete", showItem)} 
+                        on:click={() => handleFormOpen("show-delete", showItem)} 
                         class="material-symbols-outlined p-1 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all"
                     >
                         delete
@@ -82,6 +52,3 @@
         </div>
     {/each}
 </section>
-<ModalContainer bind:modal={isModalActive}>
-    <ShowForm mode={mode} show={show} bind:modal={isModalActive}/>
-</ModalContainer>
