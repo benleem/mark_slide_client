@@ -4,6 +4,8 @@
 	import { getModalActive } from "$lib/context/modal";
 	import { convertTime } from "$lib/utils/helpers";
 
+    export let toggleViewMode: () => void
+
     const modal = getModalActive()
 
     const handleFormOpen = (modelType:ModalType) => {
@@ -41,18 +43,30 @@
             <div class="flex items-center">
                 <p class="text-sm">{$currentShow.description}</p>
             </div>
-            <div class="flex items-center text-white">
+            <div class="flex gap-2 items-center text-white">
                 <button 
-                    on:click={() => handleFormOpen("show-edit-single")} 
-                    class="material-symbols-outlined mx-2 hover:text-yellow-500 transition-colors ease-in-out duration-200"
+                    class="flex hover:text-green-500 transition-colors ease-in-out duration-200"
+                    on:click={() => toggleViewMode()}    
                 >
-                    edit
+                    <span class="material-symbols-outlined text-3xl">
+                        play_arrow
+                    </span>
                 </button>
                 <button 
-                    on:click={() => handleFormOpen("show-delete-single")} 
-                    class="material-symbols-outlined hover:text-red-500 transition-colors ease-in-out duration-200"
+                    class="flex border-white hover:text-yellow-500 transition-colors ease-in-out duration-200"
+                    on:click={() => handleFormOpen("show-edit-single")} 
                 >
-                    delete
+                    <span class="material-symbols-outlined">
+                        edit
+                    </span>
+                </button>
+                <button 
+                    class="flex hover:text-red-500 transition-colors ease-in-out duration-200"
+                    on:click={() => handleFormOpen("show-delete-single")} 
+                >
+                    <span class="material-symbols-outlined">
+                        delete
+                    </span>
                 </button>
             </div>
         </div>  

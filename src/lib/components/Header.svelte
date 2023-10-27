@@ -20,7 +20,7 @@
     }
 </script>
 
-<header>
+<header class="sticky top-0 right-0 bg-[#292929]">
     <nav>
         <ul class="p-2 flex gap-2 justify-end">
             <li>

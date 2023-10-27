@@ -10,8 +10,10 @@
     // const loadingTiles = new Array(12);
 </script>
 
-<h1 class="pb-4 text-2xl text-center">Shows</h1>
-<ShowView/>
+<section class="mx-auto w-full max-w-5xl">
+    <h1 class="pb-4 text-2xl text-center">Shows</h1>
+    <ShowView/>
+</section>
 <!-- {#await getAllShows()}
     <section class="mx-auto grid grid-cols-3 gap-8 max-w-5xl">
         {#each loadingTiles as tile,i}

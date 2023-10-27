@@ -23,7 +23,7 @@
 </script>
 
 {#if user}
-    <section class="pb-8 mx-auto flex max-w-5xl border-b-2">
+    <section class="pb-8 mx-auto flex w-full max-w-5xl border-b-2">
         <a href={user.profile_url}>
             <img class="w-full max-w-[12rem] aspect-square rounded-xl" src={user.avatar_url} alt="profile">
         </a>
