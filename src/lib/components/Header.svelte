@@ -30,9 +30,6 @@
 				<a href="/profile">Profile</a>
 			</li>
 			<li>
-				<a href="/shows">Shows</a>
-			</li>
-			<li>
 				<button
 					class="text-green-500"
 					on:click={() => handleFormOpen("show-add")}>New</button
