@@ -1,82 +1,63 @@
 <script lang="ts">
-    import  type { Slide, UpdateSlideData } from "$lib/models/slides";
-    import DragDropList from "./DragDropList.svelte";
-    import { marked } from 'marked';
-    import { writable } from 'svelte/store';
-	import { patchSlide } from '$lib/utils/api/slides';
-    
-    export let slides: Slide[]
-    let renderMarkdown: boolean = true;
-    let selectedSlide = writable<Slide>(slides[0]);
+	import type { Slide, TestSlide, UpdateSlideData } from "$lib/models/slides";
+	import { marked } from "marked";
+	import { patchSlide } from "$lib/utils/api/slides";
+	import { currentSlideIndex, showSlides } from "$lib/stores/slides";
+	import { slide } from "svelte/transition";
+	import DragDropSlides from "./DragDropSlides.svelte";
+	import { onMount } from "svelte";
 
-    function clickSlideContent(slide: Slide) {
-        if (slide.content != "") {
-            toggleRenderMarkdown();
-        }
-        saveChangesToSlide(slide);
-    }
+	let selectedSlide = $showSlides[$currentSlideIndex] || 0;
+	let markdownInputRef: HTMLTextAreaElement;
+	// let markdown : string = selectedSlide && selectedSlide.content ? selectedSlide.content : ""
+	let renderMarkdown: boolean = false;
 
-    async function saveChangesToSlide(slide: Slide) {
-        let editSlideData: UpdateSlideData = { index_number: slide.index_number, content: slide.content }
-        await patchSlide(editSlideData, slide.id);    
-    }
+	const toggleRenderMarkdown = () => {
+		if (selectedSlide.content === "") {
+			return;
+		}
+		renderMarkdown = !renderMarkdown;
+	};
 
-    function toggleRenderMarkdown() {
-        renderMarkdown = !renderMarkdown
-        if (!renderMarkdown) {
-            setTimeout(() => {
-                    const textarea = document.getElementById('edit-content-area');
-                    textarea?.focus();
-                    autoResizeTextarea();
-                }, 0);
-        }
-    }
+	$: if (renderMarkdown === false && selectedSlide) {
+		markdownInputRef?.focus();
+	}
 
-    function autoResizeTextarea() {
-        const textarea = document.getElementById('edit-content-area');
-        if (textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-        }
-    }
-
-    const textarea = document.getElementById('edit-content-area');
-    if (textarea) {
-        textarea.addEventListener('input', autoResizeTextarea);
-    }
-
-    $: {
-        console.log("Selected slide content changed:", $selectedSlide.content);
-        autoResizeTextarea();
-        if ($selectedSlide.content == "") {
-            renderMarkdown = false;
-        } else {
-            renderMarkdown = true;
-        }
-    }
-
+	$: if (selectedSlide) {
+		const updatedSlides = $showSlides.map((slide) => {
+			if (slide.id === selectedSlide.id) {
+				slide = selectedSlide;
+			}
+			return slide;
+		});
+		showSlides.set(updatedSlides);
+	}
 </script>
 
-<section>
-    <section class="flex">
-        <div class="flex-none flex-row p-5 inline">
-            {#if slides.length > 0}
-                <DragDropList bind:data={slides} {selectedSlide} />
-            {/if}
-        </div>
-
-        <div class="w-fit ml-auto p-10 flex-grow justify-end">
-            <div class="prose max-w-none w-full" >
-            {#if renderMarkdown}
-                <div on:dblclick={() => clickSlideContent($selectedSlide)}>
-                    {@html marked($selectedSlide.content)}
-                </div>
-
-                <!-- {@html marked(mdtest)} -->
-            {:else}
-                <textarea id="edit-content-area" bind:value={$selectedSlide.content} on:blur={() => clickSlideContent($selectedSlide)} class="block p-2.5 w-full h-full text-md text-gray-900 bg-gray-50 overflow-hidden rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 resize-none"></textarea>
-            {/if}
-            </div>
-        </div>
-    </section>
+<section class="p-2 flex flex-1 overflow-hidden">
+	<DragDropSlides bind:selectedSlide bind:renderMarkdown />
+	{#if $showSlides.length < 1}
+		<div
+			class="w-full grid place-items-center border-dashed border-2 border-white"
+		>
+			<p>This show has no slides</p>
+		</div>
+	{:else if renderMarkdown}
+		<div
+			class="prose prose-invert max-w-none w-full prose-table:w-max overflow-scroll"
+			role="button"
+			tabindex={0}
+			on:dblclick={() => toggleRenderMarkdown()}
+		>
+			{@html marked(selectedSlide.content)}
+		</div>
+	{:else}
+		<textarea
+			class="block p-2.5 w-full h-full text-md text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 resize-none"
+			placeholder="Enter markdown here"
+			bind:this={markdownInputRef}
+			bind:value={selectedSlide.content}
+			on:dblclick={() => toggleRenderMarkdown()}
+		/>
+	{/if}
 </section>

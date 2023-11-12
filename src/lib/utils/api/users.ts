@@ -1,11 +1,11 @@
-import type { User } from "$lib/models/users";
+import type { GitHubUser } from "$lib/models/users";
 import type { RequestEvent } from "@sveltejs/kit";
 import { PUBLIC_API_BASE_URL } from "$env/static/public";
 
 export const getCurrentUser = async (
 	event: RequestEvent<Partial<Record<string, string>>, string | null>
 ): Promise<{
-	user: User | null;
+	user: GitHubUser | null;
 	status: string;
 }> => {
 	try {
@@ -20,7 +20,7 @@ export const getCurrentUser = async (
 				status: responseJson.message as string
 			};
 		}
-		const user: User = responseJson.data.user;
+		const user: GitHubUser = responseJson.data.user;
 
 		return {
 			user,
