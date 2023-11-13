@@ -8,6 +8,7 @@
 	import TextInput from "./Inputs/TextInput.svelte";
 	import RadioInput from "./Inputs/RadioInput.svelte";
 	import { getModalActive } from "$lib/context/modal";
+	import { v4 as uuidv4 } from "uuid";
 
 	const modal = getModalActive();
 	export let mode: ModalType;
@@ -22,9 +23,18 @@
 		view_code: show.view_code,
 		public: show.public
 	};
-
 	const handleSubmit = async () => {
 		formLoading = true;
+
+		if (mode === "show-add") {
+			if (showFormData.view_code.length === 0) {
+				console.log("View code is empty, generating...");
+				let newVc = uuidv4();
+				console.log("View code generated: {}", newVc);
+				showFormData.view_code = newVc;
+			}
+		}
+
 		const response =
 			mode === "show-add"
 				? await postShow(showFormData)
@@ -151,21 +161,23 @@
 			name="viewCode"
 			bind:value={showFormData.view_code}
 		/>
-		<fieldset>
-			Public?<br />
-			<RadioInput
-				label="Yes"
-				name="public"
-				value={true}
-				bind:group={showFormData.public}
-			/>
-			<RadioInput
-				label="No"
-				name="public"
-				value={false}
-				bind:group={showFormData.public}
-			/>
-		</fieldset>
+		<div class="flex justify-between">
+			<fieldset>
+				Public?<br />
+				<RadioInput
+					label="Yes"
+					name="public"
+					value={true}
+					bind:group={showFormData.public}
+				/>
+				<RadioInput
+					label="No"
+					name="public"
+					value={false}
+					bind:group={showFormData.public}
+				/>
+			</fieldset>
+		</div>
 		<div>
 			<button
 				type="submit"

@@ -6,6 +6,18 @@
 
 	export let toggleViewMode: () => void;
 
+	// viewcode should only be string once database no longer allows nullable viewcode, but for now it can be undefined
+	// Also likely this function should be defined elsewhere, but it's here for now 🫣
+	async function generateShareUrl(viewcode: string | undefined) {
+		let currentUrl = new URL(window.location.href);
+		if (viewcode != undefined) {
+			currentUrl.searchParams.set("share", viewcode);
+			console.log("Url Constructed: ", currentUrl);
+		}
+		await navigator.clipboard.writeText(currentUrl.toString());
+		console.log("Copied Url to clipboard");
+	}
+
 	const modal = getModalActive();
 
 	const handleFormOpen = (modelType: ModalType) => {
@@ -44,6 +56,15 @@
 				<p class="text-sm">{$currentShow.description}</p>
 			</div>
 			<div class="flex gap-2 items-center text-white">
+				{#if $currentShow.public}
+					<button
+						class="flex hover:text-green-500 transition-colors ease-in-out duration-200"
+						on:click={async () =>
+							await generateShareUrl($currentShow?.view_code)}
+					>
+						<span class="material-symbols-outlined text-2xl"> share </span>
+					</button>
+				{/if}
 				<button
 					class="flex hover:text-green-500 transition-colors ease-in-out duration-200"
 					on:click={() => toggleViewMode()}
