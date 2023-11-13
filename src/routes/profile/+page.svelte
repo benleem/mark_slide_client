@@ -23,12 +23,8 @@
 
 {#if user}
 	<section class="pb-8 mx-auto flex w-full max-w-5xl border-b-2">
-		<a href={user.html_url}>
-			<img
-				class="w-full max-w-[15rem] aspect-square rounded-full"
-				src={user.avatar_url}
-				alt="profile"
-			/>
+		<a class="aspect-square rounded-full overflow-hidden" href={user.html_url}>
+			<img class="w-full max-w-[15rem]" src={user.avatar_url} alt="profile" />
 		</a>
 		<div class="pl-4 pt-4 w-full flex justify-between items-end">
 			<div>
