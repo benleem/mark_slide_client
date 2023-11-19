@@ -31,8 +31,6 @@
 
 	const flipDurationMs = 300;
 
-	$: console.log($showSlides);
-
 	function handleConsider(event: CustomEvent<DndEvent<TestSlide>>) {
 		showSlides.set(event.detail.items);
 	}
@@ -143,12 +141,12 @@
 				animate:flip={{ duration: flipDurationMs }}
 			>
 				<div
-					style={`border-color: ${
+					style={`${
 						slide && selectedSlide && slide.id === selectedSlide.id
-							? "#eab308"
-							: "white"
-					};`}
-					class="relative p-2 mb-2 border-2 border-white aspect-video overflow-hidden"
+							? "border-color: #eab308; outline-style: solid; outline-width: 2px; outline-offset: -3px; outline-color: #eab308; "
+							: "border-color: white;"
+					}`}
+					class="relative p-2 mb-2 border-[1px] border-white aspect-video overflow-hidden"
 					on:click={() => handleSelectSlide(slide)}
 				>
 					<div
