@@ -20,6 +20,7 @@
 	import { writable } from "svelte/store";
 	import { currentSlideIndex, showSlides } from "$lib/stores/slides";
 	import { goto } from "$app/navigation";
+	import GoogleIcon from "./GoogleIcon.svelte";
 
 	const showId = $page.params.id;
 	// export let slides: Slide[];
@@ -29,6 +30,8 @@
 	export let renderMarkdown: boolean;
 
 	const flipDurationMs = 300;
+
+	$: console.log($showSlides);
 
 	function handleConsider(event: CustomEvent<DndEvent<TestSlide>>) {
 		showSlides.set(event.detail.items);
@@ -80,6 +83,39 @@
 		currentSlideIndex.set(currentSlide);
 	};
 
+	const deleteSlide = (slide: TestSlide) => {
+		if (selectedSlide === slide) {
+			selectedSlide = slide;
+
+			// update currentSlideIndex to the previous slide
+			let newCurrentSlide = $showSlides.findIndex(
+				(slide) => slide.id === selectedSlide.id
+			);
+			currentSlideIndex.set(newCurrentSlide === 0 ? 0 : newCurrentSlide - 1);
+
+			showSlides.update((slides) =>
+				slides.filter((slide) => slide.id !== selectedSlide.id)
+			);
+
+			selectedSlide = $showSlides[$currentSlideIndex];
+		} else {
+			let currentSlide = selectedSlide;
+			selectedSlide = slide;
+
+			showSlides.update((slides) =>
+				slides.filter((slide) => slide.id !== selectedSlide.id)
+			);
+
+			// update currentSlideIndex to the current slide
+			let newCurrentSlideIndex = $showSlides.findIndex(
+				(slide) => slide.id === currentSlide.id
+			);
+			currentSlideIndex.set(newCurrentSlideIndex);
+
+			selectedSlide = $showSlides[$currentSlideIndex];
+		}
+	};
+
 	// function changeSelectedSlide(i: number) {
 	//     /// ADD A CHECK FOR WHETHER THERE IS CONTENT IN THE SLIDE, IF NOT MAKE RENDER MARKDOWN = FALSE
 	//     selectedSlide.set(data[i]);
@@ -100,11 +136,11 @@
 	>
 		{#each $showSlides as slide (slide.id)}
 			<div
+				class="relative"
 				role="button"
 				tabindex={0}
 				aria-label={slide.content}
 				animate:flip={{ duration: flipDurationMs }}
-				on:click={() => handleSelectSlide(slide)}
 			>
 				<div
 					style={`border-color: ${
@@ -112,7 +148,8 @@
 							? "#eab308"
 							: "white"
 					};`}
-					class="p-2 mb-2 border-2 border-white aspect-video overflow-hidden"
+					class="relative p-2 mb-2 border-2 border-white aspect-video overflow-hidden"
+					on:click={() => handleSelectSlide(slide)}
 				>
 					<div
 						class="prose prose-invert w-full prose-table:w-max scale-50 origin-top"
@@ -120,6 +157,12 @@
 						{@html marked(slide.content)}
 					</div>
 				</div>
+				<button
+					class="m-1 absolute bottom-0 right-0 hover:text-red-500 transition-colors ease-in-out duration-200"
+					on:click={() => deleteSlide(slide)}
+				>
+					<GoogleIcon iconType="delete" />
+				</button>
 			</div>
 		{/each}
 	</div>
