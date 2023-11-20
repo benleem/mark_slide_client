@@ -3,10 +3,16 @@
 	import { showSlides, currentSlideIndex } from "$lib/stores/slides";
 	import FullScreenWrapper from "./FullScreenWrapper.svelte";
 	import SlideShowNavButton from "./SlideShowNavButton.svelte";
+	import { onMount } from "svelte";
+	import GoogleIcon from "./GoogleIcon.svelte";
 
 	export let toggleViewMode: () => void;
 
 	$: selectedSlide = $showSlides[$currentSlideIndex];
+
+	onMount(() => {
+		console.log("hello");
+	});
 
 	const previousSlide = () => {
 		if ($currentSlideIndex <= 0) {
@@ -65,10 +71,13 @@
 		</FullScreenWrapper>
 	{:else}
 		<div class="p-2 w-full grid place-items-center">
-			<div>
-				<h1>This show has no slides {":("}</h1>
-				<button class="bg-red-300" on:click={() => toggleViewMode()}>
-					Edit slides
+			<div class="flex">
+				<h1 class="text-xl">This show has no slides</h1>
+				<button
+					class="flex ml-4 text-blue-500"
+					on:click={() => toggleViewMode()}
+				>
+					<GoogleIcon iconType="keyboard_return" />
 				</button>
 			</div>
 		</div>

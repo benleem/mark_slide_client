@@ -9,6 +9,7 @@
 	import RadioInput from "./Inputs/RadioInput.svelte";
 	import { getModalActive } from "$lib/context/modal";
 	import { v4 as uuidv4 } from "uuid";
+	import GoogleIcon from "./GoogleIcon.svelte";
 
 	const modal = getModalActive();
 	export let mode: ModalType;
@@ -109,9 +110,9 @@
 						type: null,
 						data: null
 					})}
-				class="material-symbols-outlined bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
+				class="bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
 			>
-				close
+				<GoogleIcon iconType="close" />
 			</button>
 		</div>
 		<p class="pt-2">Are you sure you want to delete this show?</p>
@@ -145,9 +146,9 @@
 						type: null,
 						data: null
 					})}
-				class="material-symbols-outlined bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
+				class="bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
 			>
-				close
+				<GoogleIcon iconType="close" />
 			</button>
 		</div>
 		<TextInput label="Title" name="title" bind:value={showFormData.title} />

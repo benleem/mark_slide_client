@@ -3,6 +3,7 @@
 	import { currentShow } from "$lib/stores/currentShow";
 	import { getModalActive } from "$lib/context/modal";
 	import { convertTime } from "$lib/utils/helpers";
+	import GoogleIcon from "./GoogleIcon.svelte";
 
 	export let toggleViewMode: () => void;
 
@@ -62,26 +63,26 @@
 						on:click={async () =>
 							await generateShareUrl($currentShow?.view_code)}
 					>
-						<span class="material-symbols-outlined text-2xl"> share </span>
+						<GoogleIcon iconType="share" />
 					</button>
 				{/if}
 				<button
 					class="flex hover:text-green-500 transition-colors ease-in-out duration-200"
 					on:click={() => toggleViewMode()}
 				>
-					<span class="material-symbols-outlined text-3xl"> play_arrow </span>
+					<GoogleIcon iconType="play_arrow" className="text-3xl" />
 				</button>
 				<button
 					class="flex border-white hover:text-yellow-500 transition-colors ease-in-out duration-200"
 					on:click={() => handleFormOpen("show-edit-single")}
 				>
-					<span class="material-symbols-outlined"> edit </span>
+					<GoogleIcon iconType="edit" />
 				</button>
 				<button
 					class="flex hover:text-red-500 transition-colors ease-in-out duration-200"
 					on:click={() => handleFormOpen("show-delete-single")}
 				>
-					<span class="material-symbols-outlined"> delete </span>
+					<GoogleIcon iconType="delete" />
 				</button>
 			</div>
 		</div>

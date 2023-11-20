@@ -4,6 +4,7 @@
 	import { shows } from "$lib/stores/shows";
 	import { getModalActive } from "$lib/context/modal";
 	import { convertTime } from "$lib/utils/helpers";
+	import GoogleIcon from "./GoogleIcon.svelte";
 
 	const modal = getModalActive();
 
@@ -212,26 +213,22 @@
 				<div class="absolute right-0 bottom-0 p-2 flex justify-end gap-1">
 					<button
 						on:click={() => handleFormOpen("show-edit", showItem)}
-						class="material-symbols-outlined p-1 bg-blue-600 text-white rounded-full hover:bg-blue-500 transition-all"
+						class="p-1 bg-blue-600 text-white rounded-full hover:bg-blue-500 transition-all"
 					>
-						edit
+						<GoogleIcon iconType="edit" />
 					</button>
 					<button
 						on:click={() => handleFormOpen("show-delete", showItem)}
-						class="material-symbols-outlined p-1 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all"
+						class="p-1 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all"
 					>
-						delete
+						<GoogleIcon iconType="delete" />
 					</button>
 				</div>
 			</div>
 			<div class="pt-0.5 flex justify-between text-gray-300">
-				<li class="material-symbols-outlined">
-					{#if showItem.public}
-						visibility
-					{:else}
-						visibility_off
-					{/if}
-				</li>
+				<GoogleIcon
+					iconType={`${showItem.public ? "visibility" : "visibility_off"}`}
+				/>
 				<p class="text-sm">
 					Updated: {convertTime(showItem.updated_at, {
 						year: "numeric",

@@ -165,13 +165,12 @@
 		{/each}
 	</div>
 	<button
-		class="group w-full p-2 border-dashed border-2 border-white hover:border-blue-500 transition-colors duration-200 ease-in-out"
+		class="group w-full p-2 flex justify-center border-dashed border-2 border-white hover:border-blue-500 transition-colors duration-200 ease-in-out"
 		on:click={() => createNewSlide()}
 	>
-		<span
-			class="material-symbols-outlined text-3xl group-hover:text-blue-500 transition-colors duration-200 ease-in-out"
-		>
-			add
-		</span>
+		<GoogleIcon
+			iconType="add"
+			className="text-3xl group-hover:text-blue-500 transition-colors duration-200 ease-in-out"
+		/>
 	</button>
 </div>
