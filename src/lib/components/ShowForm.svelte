@@ -1,5 +1,9 @@
 <script lang="ts">
-	import type { Show, ShowFormData } from "$lib/models/shows";
+	import type {
+		Show,
+		CreateShowFormData,
+		EditShowFormData
+	} from "$lib/models/shows";
 	import type { ModalType } from "$lib/models/modal";
 	import { goto } from "$app/navigation";
 	import { deleteShow, patchShow, postShow } from "$lib/utils/api/shows";
@@ -8,7 +12,6 @@
 	import TextInput from "./Inputs/TextInput.svelte";
 	import RadioInput from "./Inputs/RadioInput.svelte";
 	import { getModalActive } from "$lib/context/modal";
-	import { v4 as uuidv4 } from "uuid";
 
 	const modal = getModalActive();
 	export let mode: ModalType;
@@ -17,28 +20,42 @@
 	let formLoading = false;
 	let formError = "";
 
-	let showFormData: ShowFormData = {
-		title: show.title,
-		description: show.description,
-		view_code: show.view_code,
-		public: show.public
-	};
-	const handleSubmit = async () => {
-		formLoading = true;
+	let showFormData: CreateShowFormData | EditShowFormData;
 
-		if (mode === "show-add") {
-			if (showFormData.view_code.length === 0) {
-				console.log("View code is empty, generating...");
-				let newVc = uuidv4();
-				console.log("View code generated: {}", newVc);
-				showFormData.view_code = newVc;
-			}
-		}
+	function isEditData(
+		data: CreateShowFormData | EditShowFormData
+	): data is EditShowFormData {
+		return (data as EditShowFormData).view_code !== undefined;
+	}
+
+	if (mode === "show-add") {
+		showFormData = {
+			title: "",
+			description: "",
+			public: false
+		} as CreateShowFormData;
+	} else {
+		showFormData = {
+			title: show.title,
+			description: show.description,
+			view_code: false,
+			public: show.public
+		} as EditShowFormData;
+	}
+
+	if (isEditData(showFormData)) {
+		showFormData = showFormData as EditShowFormData;
+	}
+
+	const handleSubmit = async () => {
+		console.log("Submitting: ", showFormData);
+		console.log("Mode: ", mode);
+		formLoading = true;
 
 		const response =
 			mode === "show-add"
-				? await postShow(showFormData)
-				: await patchShow(showFormData, show.id);
+				? await postShow(showFormData as CreateShowFormData)
+				: await patchShow(showFormData as EditShowFormData, show.id);
 		if (response.show === null || response.status !== "success") {
 			formError = response.status;
 		} else if (response.show) {
@@ -156,11 +173,14 @@
 			name="description"
 			bind:value={showFormData.description}
 		/>
-		<TextInput
-			label="View Code"
-			name="viewCode"
-			bind:value={showFormData.view_code}
-		/>
+
+		{#if isEditData(showFormData)}
+			<label>
+				<input type="checkbox" bind:checked={showFormData.view_code} />
+				Generate me a new view code
+			</label>
+		{/if}
+
 		<div class="flex justify-between">
 			<fieldset>
 				Public?<br />

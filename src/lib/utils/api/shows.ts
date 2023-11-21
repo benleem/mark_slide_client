@@ -1,7 +1,11 @@
 import { PUBLIC_API_BASE_URL } from "$env/static/public";
 import type { ServerLoadEvent, LoadEvent } from "@sveltejs/kit";
 import type { RouteParams } from "../../../routes/shows/$types";
-import type { Show, ShowFormData } from "$lib/models/shows";
+import type {
+	Show,
+	CreateShowFormData,
+	EditShowFormData
+} from "$lib/models/shows";
 
 export const getInitialShows = async (
 	event: LoadEvent<RouteParams, null, Record<string, unknown>>
@@ -186,7 +190,7 @@ export const getShowById = async (
 };
 
 export const postShow = async (
-	showFormData: ShowFormData
+	createShowFormData: CreateShowFormData
 ): Promise<{
 	show: Show | null;
 	status: string;
@@ -198,7 +202,7 @@ export const postShow = async (
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(showFormData)
+			body: JSON.stringify(createShowFormData)
 		});
 		const responseJson = await response.json();
 
@@ -228,7 +232,7 @@ export const postShow = async (
 };
 
 export const patchShow = async (
-	showFormData: ShowFormData,
+	editShowFormData: EditShowFormData,
 	showId: string
 ): Promise<{
 	show: Show | null;
@@ -241,7 +245,7 @@ export const patchShow = async (
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify(showFormData)
+			body: JSON.stringify(editShowFormData)
 		});
 		const responseJson = await response.json();
 
