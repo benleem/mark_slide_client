@@ -10,10 +10,6 @@
 
 	$: selectedSlide = $showSlides[$currentSlideIndex];
 
-	onMount(() => {
-		console.log("hello");
-	});
-
 	const previousSlide = () => {
 		if ($currentSlideIndex <= 0) {
 			currentSlideIndex.set($showSlides.length - 1);

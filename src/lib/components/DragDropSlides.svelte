@@ -146,7 +146,7 @@
 							? "border-color: #eab308; outline-style: solid; outline-width: 2px; outline-offset: -3px; outline-color: #eab308; "
 							: "border-color: white;"
 					}`}
-					class="relative p-2 mb-2 border-[1px] border-white aspect-video overflow-hidden"
+					class="relative p-2 mb-2 border-[1px] bg-[#292929] border-white aspect-video overflow-hidden"
 					on:click={() => handleSelectSlide(slide)}
 				>
 					<div
