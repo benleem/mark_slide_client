@@ -25,8 +25,7 @@ export type CreateSlideData = {
 	index_number: number;
 };
 
-export type DeleteSlideParams = {
-	id: string;
-	user_id: number;
+export type DeleteSlideBody = {
+	slide_index: number;
 	show_id: string;
 };

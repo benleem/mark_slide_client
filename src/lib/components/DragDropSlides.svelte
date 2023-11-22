@@ -2,9 +2,7 @@
 	import type {
 		CreateSlideData,
 		Slide,
-		DeleteSlideParams,
-		UpdateSlideData,
-		TestSlide
+		UpdateSlideData
 	} from "$lib/models/slides";
 	import { v4 as uuidv4 } from "uuid";
 	import { page } from "$app/stores";
@@ -22,20 +20,19 @@
 	import { goto } from "$app/navigation";
 	import GoogleIcon from "./GoogleIcon.svelte";
 
-	const showId = $page.params.id;
-	// export let slides: Slide[];
-
-	// export let selectedSlide: Slide;
-	export let selectedSlide: TestSlide;
+	export let selectedSlide: Slide;
 	export let renderMarkdown: boolean;
 
+	const showId = $page.params.id;
 	const flipDurationMs = 300;
 
-	function handleConsider(event: CustomEvent<DndEvent<TestSlide>>) {
+	$: console.log($showSlides);
+
+	function handleConsider(event: CustomEvent<DndEvent<Slide>>) {
 		showSlides.set(event.detail.items);
 	}
 
-	function handleFinalize(event: CustomEvent<DndEvent<TestSlide>>) {
+	function handleFinalize(event: CustomEvent<DndEvent<Slide>>) {
 		showSlides.set(event.detail.items);
 
 		//setting slide index for slideshow starting point
@@ -56,22 +53,25 @@
 	// }
 
 	async function createNewSlide() {
-		let createSlideBody: TestSlide = {
-			id: uuidv4(),
+		let newSlide = await addSlideToShow({
+			show_id: showId,
 			content: "",
 			index_number: $showSlides.length
-		};
-		showSlides.update((slides) => [...slides, createSlideBody]);
-		selectedSlide = $showSlides[$showSlides.length - 1];
-		renderMarkdown = false;
+		});
 
-		//setting slide index for slideshow starting point
-		currentSlideIndex.set($showSlides.length - 1);
+		if (newSlide.slide === null || newSlide.status !== "success") {
+			console.log("Error has occured");
+		} else if (newSlide.slide) {
+			showSlides.update((slides) => [...slides, newSlide.slide as Slide]);
+			selectedSlide = $showSlides[$showSlides.length - 1];
+			renderMarkdown = false;
 
-		// addSlideToShow(createSlideBody);
+			//setting slide index for slideshow starting point
+			currentSlideIndex.set($showSlides.length - 1);
+		}
 	}
 
-	const handleSelectSlide = (slide: TestSlide) => {
+	const handleSelectSlide = (slide: Slide) => {
 		selectedSlide = slide;
 
 		//setting slide index for slideshow starting point
@@ -81,36 +81,51 @@
 		currentSlideIndex.set(currentSlide);
 	};
 
-	const deleteSlide = (slide: TestSlide) => {
-		if (selectedSlide === slide) {
-			selectedSlide = slide;
+	const deleteSlide = async (slide: Slide) => {
+		let removedSlide = await removeSlideFromShow(slide.id, {
+			show_id: showId,
+			slide_index: slide.index_number
+		});
+		if (removedSlide.slide === null || removedSlide.status !== "success") {
+			console.log("Error has occured");
+		} else if (removedSlide.slide) {
+			if (selectedSlide === slide) {
+				selectedSlide = slide;
 
-			// update currentSlideIndex to the previous slide
-			let newCurrentSlide = $showSlides.findIndex(
-				(slide) => slide.id === selectedSlide.id
-			);
-			currentSlideIndex.set(newCurrentSlide === 0 ? 0 : newCurrentSlide - 1);
+				// update currentSlideIndex to the previous slide
+				let newCurrentSlide = $showSlides.findIndex(
+					(slide) => slide.id === selectedSlide.id
+				);
+				currentSlideIndex.set(newCurrentSlide === 0 ? 0 : newCurrentSlide - 1);
 
-			showSlides.update((slides) =>
-				slides.filter((slide) => slide.id !== selectedSlide.id)
-			);
+				showSlides.update((slides) => {
+					for (let i = slide.index_number; i < slides.length; i++) {
+						slides[i].index_number -= 1;
+					}
+					return slides.filter((slide) => slide.id !== selectedSlide.id);
+				});
 
-			selectedSlide = $showSlides[$currentSlideIndex];
-		} else {
-			let currentSlide = selectedSlide;
-			selectedSlide = slide;
+				selectedSlide = $showSlides[$currentSlideIndex];
+			} else {
+				let currentSlide = selectedSlide;
+				selectedSlide = slide;
 
-			showSlides.update((slides) =>
-				slides.filter((slide) => slide.id !== selectedSlide.id)
-			);
+				showSlides.update((slides) => {
+					for (let i = slide.index_number; i < slides.length; i++) {
+						slides[i].index_number -= 1;
+					}
+					return slides.filter((slide) => slide.id !== selectedSlide.id);
+				});
 
-			// update currentSlideIndex to the current slide
-			let newCurrentSlideIndex = $showSlides.findIndex(
-				(slide) => slide.id === currentSlide.id
-			);
-			currentSlideIndex.set(newCurrentSlideIndex);
+				// update currentSlideIndex to the current slide
+				let newCurrentSlideIndex = $showSlides.findIndex(
+					(slide) => slide.id === currentSlide.id
+				);
+				currentSlideIndex.set(newCurrentSlideIndex);
 
-			selectedSlide = $showSlides[$currentSlideIndex];
+				selectedSlide = $showSlides[$currentSlideIndex];
+			}
+			console.log($showSlides);
 		}
 	};
 

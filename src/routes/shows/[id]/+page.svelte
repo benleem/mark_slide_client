@@ -17,7 +17,7 @@
 	const initialShow = show.show as Show;
 	currentShow.set(initialShow);
 
-	const initialSlides = slides as TestSlide[];
+	const initialSlides = slides.slides as Slide[];
 	showSlides.set(initialSlides);
 
 	currentSlideIndex.set(0);

@@ -32,6 +32,8 @@
 		});
 		showSlides.set(updatedSlides);
 	}
+
+	console.log($showSlides);
 </script>
 
 <section class="p-2 flex flex-1 overflow-hidden">

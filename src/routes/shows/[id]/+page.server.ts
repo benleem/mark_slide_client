@@ -8,7 +8,6 @@ export const load: PageServerLoad = async (event) => {
 	return {
 		user: locals.user,
 		show: getShowById(event, params.id),
-		// slides: getShowSlides(event, params.id)
-		slides: []
+		slides: getShowSlides(event, params.id)
 	};
 };

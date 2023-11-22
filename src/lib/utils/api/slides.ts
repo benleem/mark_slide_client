@@ -4,9 +4,9 @@ import type { RouteParams } from "../../../routes/shows/[id]/$types";
 import type {
 	CreateSlideData,
 	Slide,
-	DeleteSlideParams,
 	// SlideFormData,
-	UpdateSlideData
+	UpdateSlideData,
+	DeleteSlideBody
 } from "$lib/models/slides";
 
 export const getShowSlides = async (
@@ -46,7 +46,9 @@ export const getShowSlides = async (
 	}
 };
 
-export const addSlideToShow = async (createSlideData: CreateSlideData): Promise<{slides: Slide[] | null; status: string;}> => {
+export const addSlideToShow = async (
+	createSlideData: CreateSlideData
+): Promise<{ slide: Slide | null; status: string }> => {
 	try {
 		const response = await fetch(`${PUBLIC_API_BASE_URL}/slides`, {
 			method: "POST",
@@ -57,71 +59,65 @@ export const addSlideToShow = async (createSlideData: CreateSlideData): Promise<
 			body: JSON.stringify(createSlideData)
 		});
 		const responseJson = await response.json();
-		console.log(responseJson);
-
 		if (responseJson.status !== "success") {
 			return {
-				slides: null,
+				slide: null,
 				status: responseJson.status as string
 			};
 		}
-		const slides: Slide[] = responseJson.data.slides;
+		const slide: Slide = responseJson.data.slide;
 		return {
-			slides,
+			slide,
 			status: responseJson.status as string
 		};
 	} catch (error) {
 		if (error instanceof Error) {
 			return {
-				slides: null,
+				slide: null,
 				status: error.message as string
 			};
 		}
 		return {
-			slides: null,
+			slide: null,
 			status: error as string
 		};
 	}
 };
 
 export const removeSlideFromShow = async (
-	deleteSlideParams: DeleteSlideParams
-): Promise<{slides: Slide[] | null; status: string;}> => {
+	slideId: string,
+	deleteSlideBody: DeleteSlideBody
+): Promise<{ slide: Slide | null; status: string }> => {
 	try {
-		const response = await fetch(
-			`${PUBLIC_API_BASE_URL}/slides/${deleteSlideParams.id}`,
-			{
-				method: "DELETE",
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify(deleteSlideParams)
-			}
-		);
+		const response = await fetch(`${PUBLIC_API_BASE_URL}/slides/${slideId}`, {
+			method: "DELETE",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify(deleteSlideBody)
+		});
 		const responseJson = await response.json();
-		console.log(responseJson);
-
 		if (responseJson.status !== "success") {
 			return {
-				slides: null,
+				slide: null,
 				status: responseJson.status as string
 			};
 		}
-		const slides: Slide[] = responseJson.data.slides;
+		const slide: Slide = responseJson.data.slide;
 		return {
-			slides,
+			slide,
 			status: responseJson.status as string
 		};
 	} catch (error) {
 		if (error instanceof Error) {
 			return {
-				slides: null,
+				slide: null,
 				status: error.message as string
 			};
 		}
 		return {
-			slides: null,
+			slide: null,
 			status: error as string
 		};
 	}
