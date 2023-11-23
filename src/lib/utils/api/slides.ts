@@ -13,7 +13,7 @@ export const getShowSlides = async (
 	event: ServerLoadEvent<RouteParams, NonNullable<unknown>, string>,
 	showId: string
 ): Promise<{
-	slides: Slide[];
+	slides: Slide[] | null;
 	status: string;
 }> => {
 	try {
@@ -23,7 +23,7 @@ export const getShowSlides = async (
 		const responseJson = await response.json();
 		if (responseJson.status !== "success") {
 			return {
-				slides: [],
+				slides: null,
 				status: responseJson.status as string
 			};
 		}
@@ -35,12 +35,12 @@ export const getShowSlides = async (
 	} catch (error) {
 		if (error instanceof Error) {
 			return {
-				slides: [],
+				slides: null,
 				status: error.message as string
 			};
 		}
 		return {
-			slides: [],
+			slides: null,
 			status: error as string
 		};
 	}

@@ -57,15 +57,12 @@
 				<p class="text-sm">{$currentShow.description}</p>
 			</div>
 			<div class="flex gap-2 items-center text-white">
-				{#if $currentShow.public}
-					<button
-						class="flex hover:text-green-500 transition-colors ease-in-out duration-200"
-						on:click={async () =>
-							await generateShareUrl($currentShow?.view_code)}
-					>
-						<GoogleIcon iconType="share" />
-					</button>
-				{/if}
+				<button
+					class="flex hover:text-green-500 transition-colors ease-in-out duration-200"
+					on:click={async () => await generateShareUrl($currentShow?.view_code)}
+				>
+					<GoogleIcon iconType="share" className="text-xl" />
+				</button>
 				<button
 					class="flex hover:text-green-500 transition-colors ease-in-out duration-200"
 					on:click={() => toggleViewMode()}
