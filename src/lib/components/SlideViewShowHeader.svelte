@@ -4,19 +4,21 @@
 	import { getModalActive } from "$lib/context/modal";
 	import { convertTime } from "$lib/utils/helpers";
 	import GoogleIcon from "./GoogleIcon.svelte";
+	import { page } from "$app/stores";
+	import { PUBLIC_CLIENT_BASE_URL } from "$env/static/public";
 
 	export let toggleViewMode: () => void;
 
 	// viewcode should only be string once database no longer allows nullable viewcode, but for now it can be undefined
 	// Also likely this function should be defined elsewhere, but it's here for now 🫣
 	async function generateShareUrl(viewcode: string | undefined) {
-		let currentUrl = new URL(window.location.href);
+		let currentUrl = $page.url.pathname;
+		const copy_url = `${PUBLIC_CLIENT_BASE_URL}${currentUrl}?viewCode=${viewcode}&viewMode=${true}`;
+
 		if (viewcode != undefined) {
-			currentUrl.searchParams.set("share", viewcode);
-			console.log("Url Constructed: ", currentUrl);
+			await navigator.clipboard.writeText(copy_url);
+			console.log("Copied Url to clipboard");
 		}
-		await navigator.clipboard.writeText(currentUrl.toString());
-		console.log("Copied Url to clipboard");
 	}
 
 	const modal = getModalActive();

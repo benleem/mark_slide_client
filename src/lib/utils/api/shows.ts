@@ -160,8 +160,10 @@ export const getShowById = async (
 	status: string;
 }> => {
 	try {
+		const viewCode = event.url.searchParams.get("viewCode");
+
 		const response = await event.fetch(
-			`${PUBLIC_API_BASE_URL}/shows/${showId}`
+			`${PUBLIC_API_BASE_URL}/shows/${showId}?view_code=${viewCode}`
 		);
 		const responseJson = await response.json();
 		if (responseJson.status !== "success") {
