@@ -1,11 +1,27 @@
 <script>
-    import Header from "$lib/components/Header.svelte"
-    import "../app.css"
+	import { page } from "$app/stores";
+	import { initializeModal } from "$lib/context/modal";
+	import { initializeAlert } from "$lib/context/alert";
+	import Header from "$lib/components/Header.svelte";
+	import AlertBox from "$lib/components/AlertBox.svelte";
+	import ModalContainer from "$lib/components/ModalContainer.svelte";
+	import "../app.css";
+
+	initializeModal();
+	initializeAlert();
 </script>
 
-<div class="h-full flex flex-col">
-    <Header/>
-    <main class="flex-1">
-        <slot />
-    </main>
-</div>
+{#if $page.route.id && $page.route.id !== "/shows/[id]"}
+	{#if !$page.error}
+		<Header />
+	{/if}
+	<main>
+		<slot />
+	</main>
+{:else}
+	<main class="h-full flex flex-col">
+		<slot />
+	</main>
+{/if}
+<ModalContainer />
+<AlertBox />

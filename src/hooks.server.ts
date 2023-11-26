@@ -1,6 +1,10 @@
-import type { HandleFetch } from "@sveltejs/kit";
+import type { Handle, HandleFetch } from "@sveltejs/kit";
+import type { GitHubUser } from "$lib/models/users";
+import { getCurrentUser } from "$lib/utils/api/users";
 
-export const handleFetch: HandleFetch = ({ event, request, fetch }) => {
-	request.headers.set("cookie", event.request.headers.get("cookie") || "");
-	return fetch(request);
+export const handle: Handle = async ({ event, resolve }) => {
+	const user = await getCurrentUser(event);
+	event.locals.user = user.user as GitHubUser;
+	const response = await resolve(event);
+	return response;
 };
