@@ -6,8 +6,18 @@
 	import GoogleIcon from "./GoogleIcon.svelte";
 	import { page } from "$app/stores";
 	import { PUBLIC_CLIENT_BASE_URL } from "$env/static/public";
+	import { getAlertActive, setAlertActive } from "$lib/context/alert";
+	import { text } from "@sveltejs/kit";
+	import { setFeatureFlag } from "svelte-dnd-action";
 
 	export let toggleViewMode: () => void;
+
+	const modal = getModalActive();
+	const handleFormOpen = (modelType: ModalType) => {
+		modal.set({ active: true, type: modelType, data: $currentShow });
+	};
+
+	const alert = getAlertActive();
 
 	// viewcode should only be string once database no longer allows nullable viewcode, but for now it can be undefined
 	// Also likely this function should be defined elsewhere, but it's here for now 🫣
@@ -17,17 +27,9 @@
 
 		if (viewcode != undefined) {
 			await navigator.clipboard.writeText(copy_url);
-			console.log("Copied Url to clipboard");
+			setAlertActive(alert, `Copied url to clipboard`);
 		}
 	}
-
-	const modal = getModalActive();
-
-	const handleFormOpen = (modelType: ModalType) => {
-		$modal.active = true;
-		$modal.type = modelType;
-		$modal.data = $currentShow;
-	};
 </script>
 
 {#if $currentShow}
@@ -60,7 +62,7 @@
 			</div>
 			<div class="flex gap-2 items-center text-white">
 				<button
-					class="flex hover:text-green-500 transition-colors ease-in-out duration-200"
+					class="relative flex hover:text-green-500 transition-colors ease-in-out duration-200"
 					on:click={async () => await generateShareUrl($currentShow?.view_code)}
 				>
 					<GoogleIcon iconType="share" className="text-xl" />
