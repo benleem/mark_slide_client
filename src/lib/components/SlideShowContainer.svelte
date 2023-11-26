@@ -71,16 +71,16 @@
 		</FullScreenWrapper>
 	{:else}
 		<div class="p-2 w-full grid place-items-center">
-			<div class="flex">
-				<h1 class="text-xl">This show has no slides</h1>
+			<div class="flex items-center">
 				{#if canEdit === true}
 					<button
-						class="flex ml-4 text-blue-500"
+						class="flex mr-4 text-blue-500"
 						on:click={() => toggleViewMode()}
 					>
-						<GoogleIcon iconType="keyboard_return" />
+						<GoogleIcon iconType="arrow_back" />
 					</button>
 				{/if}
+				<h1 class="text-xl">This show has no slides</h1>
 			</div>
 		</div>
 	{/if}
