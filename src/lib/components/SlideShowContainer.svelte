@@ -5,7 +5,9 @@
 	import SlideShowNavButton from "./SlideShowNavButton.svelte";
 	import { onMount } from "svelte";
 	import GoogleIcon from "./GoogleIcon.svelte";
+	import { goto } from "$app/navigation";
 
+	export let canEdit: boolean;
 	export let toggleViewMode: () => void;
 
 	$: selectedSlide = $showSlides[$currentSlideIndex];
@@ -59,7 +61,9 @@
 					<SlideShowNavButton handleClick={() => toggleFullscreen()}>
 						fullscreen
 					</SlideShowNavButton>
-					<SlideShowNavButton handleClick={() => toggleViewMode()}>
+					<SlideShowNavButton
+						handleClick={() => (canEdit ? toggleViewMode() : goto("/"))}
+					>
 						close
 					</SlideShowNavButton>
 				</div>
@@ -69,12 +73,14 @@
 		<div class="p-2 w-full grid place-items-center">
 			<div class="flex">
 				<h1 class="text-xl">This show has no slides</h1>
-				<button
-					class="flex ml-4 text-blue-500"
-					on:click={() => toggleViewMode()}
-				>
-					<GoogleIcon iconType="keyboard_return" />
-				</button>
+				{#if canEdit === true}
+					<button
+						class="flex ml-4 text-blue-500"
+						on:click={() => toggleViewMode()}
+					>
+						<GoogleIcon iconType="keyboard_return" />
+					</button>
+				{/if}
 			</div>
 		</div>
 	{/if}

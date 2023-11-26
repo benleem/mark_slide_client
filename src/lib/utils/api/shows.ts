@@ -156,6 +156,7 @@ export const getShowById = async (
 	event: ServerLoadEvent<RouteParams, NonNullable<unknown>, string>,
 	showId: string
 ): Promise<{
+	canEdit: boolean;
 	show: Show | null;
 	status: string;
 }> => {
@@ -168,23 +169,28 @@ export const getShowById = async (
 		const responseJson = await response.json();
 		if (responseJson.status !== "success") {
 			return {
+				canEdit: false,
 				show: null,
 				status: responseJson.message as string
 			};
 		}
 		const show: Show = responseJson.data.show;
+		const canEdit: boolean = responseJson.data.can_edit;
 		return {
+			canEdit,
 			show,
 			status: responseJson.status as string
 		};
 	} catch (error) {
 		if (error instanceof Error) {
 			return {
+				canEdit: false,
 				show: null,
 				status: error.message as string
 			};
 		}
 		return {
+			canEdit: false,
 			show: null,
 			status: error as string
 		};

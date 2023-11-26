@@ -6,6 +6,7 @@ import { slide } from "svelte/transition";
 
 export const load: PageServerLoad = async (event) => {
 	const { locals, params, url } = event;
+	const user = locals.user;
 
 	const show = await getShowById(event, params.id);
 	if (show.show === null || show.status !== "success") {
@@ -17,10 +18,8 @@ export const load: PageServerLoad = async (event) => {
 		throw error(404, slides.status);
 	}
 
-	console.log(show, slides);
-
 	return {
-		user: locals.user,
+		user,
 		show,
 		slides
 	};

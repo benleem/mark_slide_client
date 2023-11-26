@@ -14,6 +14,7 @@
 	export let data: PageData;
 	const { user, show, slides } = data;
 
+	const canEdit: boolean = show.canEdit;
 	const initialShow = show.show as Show;
 	currentShow.set(initialShow);
 
@@ -31,9 +32,9 @@
 	};
 </script>
 
-{#if viewMode === false}
+{#if viewMode === false && canEdit === true}
 	<SlideViewShowHeader {toggleViewMode} />
 	<SlideView />
 {:else}
-	<SlideShowContainer {toggleViewMode} />
+	<SlideShowContainer {canEdit} {toggleViewMode} />
 {/if}
