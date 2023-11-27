@@ -26,7 +26,7 @@
 	};
 </script>
 
-<header class="sticky top-0 right-0 bg-[#292929]">
+<header class="sticky top-0 right-0 bg-[#292929] z-99">
 	<nav class="flex justify-between">
 		<a class="m-2" href="/">Home</a>
 		<ul class="p-2 flex gap-2 justify-end">
