@@ -1,7 +1,6 @@
-<script>
-	import LoginLinkButton from "$lib/components/LoginLinkButton.svelte";
+<script lang="ts">
 </script>
 
 <div class="h-full w-full grid place-items-center">
-	<LoginLinkButton />
+	<h1>In progress</h1>
 </div>

@@ -39,6 +39,7 @@
 				<a class="flex text-white" href="/profile">
 					<GoogleIcon iconType="arrow_back" />
 				</a>
+
 				<div>
 					<div class="flex items-end">
 						<p class="material-symbols-outlined pr-1">
