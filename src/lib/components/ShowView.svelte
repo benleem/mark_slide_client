@@ -2,17 +2,11 @@
 	import type { Show } from "$lib/models/shows";
 	import type { ModalType } from "$lib/models/modal";
 	import { shows } from "$lib/stores/shows";
-	import { getModalActive } from "$lib/context/modal";
+	import { getModalActive, setModalActive } from "$lib/context/modal";
 	import { convertTime } from "$lib/utils/helpers";
 	import GoogleIcon from "./GoogleIcon.svelte";
 
 	const modal = getModalActive();
-
-	const handleFormOpen = (modelType: ModalType, showItem: Show) => {
-		$modal.active = true;
-		$modal.type = modelType;
-		$modal.data = showItem;
-	};
 
 	function toggleDropdown() {
 		var dropdown = document.getElementById("dropdownDefaultRadio");
@@ -192,6 +186,15 @@
 	</div>
 </div>
 <section class="mx-auto grid grid-cols-3 gap-8">
+	<button
+		class="group grid place-items-center h-min aspect-video bg-secondary-dark rounded-md"
+		on:click={() => setModalActive(modal, "show-add", null)}
+	>
+		<GoogleIcon
+			iconType="add"
+			className="p-1 border-4 border-white text-5xl rounded-full group-hover:scale-110 transition-all ease-in-out duration-200"
+		/>
+	</button>
 	{#each $shows as showItem}
 		<div class="h-min aspect-video">
 			<div class="relative h-full [&>a]:!text-white">
@@ -212,13 +215,13 @@
 				</a>
 				<div class="absolute right-0 bottom-0 p-2 flex justify-end gap-1">
 					<button
-						on:click={() => handleFormOpen("show-edit", showItem)}
+						on:click={() => setModalActive(modal, "show-edit", showItem)}
 						class="p-1 bg-blue-600 text-white rounded-full hover:bg-blue-500 transition-all"
 					>
 						<GoogleIcon iconType="edit" />
 					</button>
 					<button
-						on:click={() => handleFormOpen("show-delete", showItem)}
+						on:click={() => setModalActive(modal, "show-delete", showItem)}
 						class="p-1 bg-red-600 text-white rounded-full hover:bg-red-500 transition-all"
 					>
 						<GoogleIcon iconType="delete" />
