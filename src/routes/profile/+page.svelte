@@ -13,18 +13,20 @@
 	shows.update((shows) => initialShows.shows);
 </script>
 
-<section class="pb-8 mx-auto flex w-full border-b-2">
-	<a class="aspect-square rounded-full overflow-hidden" href={user.html_url}>
-		<img class="w-full max-w-[15rem]" src={user.avatar_url} alt="profile" />
-	</a>
-	<div class="pl-4 pt-4 w-full flex justify-between items-end">
-		<div>
-			<h1 class="text-xl">{user.name}</h1>
-			<p class="text-gray-400">{user.login}</p>
+<div class="py-8">
+	<section class="pb-8 mx-auto flex w-full border-b-2">
+		<a class="aspect-square rounded-full overflow-hidden" href={user.html_url}>
+			<img class="w-full max-w-[15rem]" src={user.avatar_url} alt="profile" />
+		</a>
+		<div class="pl-4 pt-4 w-full flex justify-between items-end">
+			<div>
+				<h1 class="text-xl">{user.name}</h1>
+				<p class="text-gray-400">{user.login}</p>
+			</div>
+			<LogoutButton />
 		</div>
-		<LogoutButton />
-	</div>
-</section>
-<section class="pt-8">
-	<ShowView />
-</section>
+	</section>
+	<section class="pt-8">
+		<ShowView />
+	</section>
+</div>

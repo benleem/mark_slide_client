@@ -18,7 +18,7 @@
 </script>
 
 {#if $page.route.id && $page.route.id !== "/shows/[id]"}
-	{#if !$page.error}
+	{#if !$page.error && $page.route.id === "/"}
 		<Header />
 	{/if}
 	<main class="mx-auto max-w-5xl w-full">

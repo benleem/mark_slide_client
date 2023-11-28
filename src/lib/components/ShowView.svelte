@@ -185,7 +185,7 @@
 		</div>
 	</div>
 </div>
-<section class="mx-auto grid grid-cols-3 gap-8">
+<section class="mx-auto grid grid-cols-1 gap-8 md:grid-cols-3 sm:grid-cols-2">
 	<button
 		class="group grid place-items-center h-min aspect-video bg-secondary-dark rounded-md"
 		on:click={() => setModalActive(modal, "show-add", null)}

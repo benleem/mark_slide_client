@@ -6,6 +6,7 @@
 	import { slide } from "svelte/transition";
 	import DragDropSlides from "./DragDropSlides.svelte";
 	import { onMount } from "svelte";
+	import MarkDownRenderer from "./MarkDownRenderer.svelte";
 
 	let selectedSlide = $showSlides[$currentSlideIndex] || 0;
 	let markdownInputRef: HTMLTextAreaElement;
@@ -32,8 +33,6 @@
 		});
 		showSlides.set(updatedSlides);
 	}
-
-	console.log($showSlides);
 </script>
 
 <section class="p-4 flex flex-1 overflow-hidden">
@@ -46,12 +45,14 @@
 		</div>
 	{:else if renderMarkdown}
 		<div
-			class="p-4 w-full max-w-none prose prose-invert prose-table:w-max overflow-scroll bg-secondary-dark rounded-xl"
+			class="w-full h-full bg-secondary-dark rounded-xl px-4 overflow-scroll"
 			role="button"
 			tabindex={0}
 			on:dblclick={() => toggleRenderMarkdown()}
 		>
-			{@html marked(selectedSlide.content)}
+			<div class="py-4">
+				<MarkDownRenderer content={selectedSlide.content} />
+			</div>
 		</div>
 	{:else}
 		<textarea

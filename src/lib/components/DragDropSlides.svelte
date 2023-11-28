@@ -19,6 +19,7 @@
 	import { currentSlideIndex, showSlides } from "$lib/stores/slides";
 	import { goto } from "$app/navigation";
 	import GoogleIcon from "./GoogleIcon.svelte";
+	import MarkDownRenderer from "./MarkDownRenderer.svelte";
 
 	export let selectedSlide: Slide;
 	export let renderMarkdown: boolean;
@@ -155,23 +156,23 @@
 				aria-label={slide.content}
 				animate:flip={{ duration: flipDurationMs }}
 			>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					style={`${
 						slide && selectedSlide && slide.id === selectedSlide.id
-							? "border-color: #eab308; outline-style: solid; outline-width: 2px; outline-offset: -3px; outline-color: #eab308;"
+							? "border-color: #eab308;"
 							: "border-color: white;"
 					}`}
 					class="relative p-2 mb-4 border-[1px] backdrop-blur cursor-pointer border-white rounded-lg aspect-video overflow-hidden"
 					on:click={() => handleSelectSlide(slide)}
 				>
-					<div
-						class="prose prose-invert w-full prose-table:w-max scale-[40%] origin-top"
-					>
-						{@html marked(slide.content)}
+					<div class="scale-[50%] origin-top">
+						<MarkDownRenderer content={slide.content} />
 					</div>
 				</div>
 				<div
-					class="absolute bottom-0 left-0 w-full flex justify-between items-center"
+					class="absolute bottom-0 left-0 w-full flex justify-between items-center cursor-pointer"
 				>
 					<span class="text-xs p-2">
 						{$showSlides.findIndex((showSlide) => showSlide.id === slide.id) +
