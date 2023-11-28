@@ -19,7 +19,7 @@
 </script>
 
 <div
-	class="h-full w-full max-w-none prose prose-invert prose-pre:p-0 prose-table:w-max overflow-scroll rounded-xl"
+	class="h-full w-full max-w-none prose prose-invert prose-pre:p-0 prose-td:text-left prose-th:text-left overflow-scroll rounded-xl"
 >
 	{@html marked.parse(content)}
 </div>
