@@ -15,6 +15,7 @@
 
 	const toggleRenderMarkdown = () => {
 		if (selectedSlide.content === "") {
+			renderMarkdown = false;
 			return;
 		}
 		renderMarkdown = !renderMarkdown;
