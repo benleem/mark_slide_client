@@ -13,7 +13,7 @@
 	shows.update((shows) => initialShows.shows);
 </script>
 
-<section class="pb-8 mx-auto flex w-full max-w-5xl border-b-2">
+<section class="pb-8 mx-auto flex w-full border-b-2">
 	<a class="aspect-square rounded-full overflow-hidden" href={user.html_url}>
 		<img class="w-full max-w-[15rem]" src={user.avatar_url} alt="profile" />
 	</a>

@@ -29,15 +29,15 @@
 	};
 </script>
 
-<section class="flex flex-1 relative">
+<section class="flex flex-1 relative w-full">
 	{#if $showSlides.length > 0}
 		<FullScreenWrapper let:toggleFullscreen>
-			<div
-				class="p-2 prose prose-invert max-w-none w-full prose-table:w-max overflow-scroll"
-			>
-				{@html marked(selectedSlide.content)}
+			<div class="p-4 mx-auto max-w-5xl w-full h-full bg-secondary-dark">
+				<div class="max-w-none w-full prose prose-invert overflow-scroll">
+					{@html marked(selectedSlide.content)}
+				</div>
 			</div>
-			<div class="w-full p-2 fixed bottom-0 left-0 flex justify-between">
+			<div class="w-full p-4 fixed bottom-0 left-0 flex justify-between">
 				<div class="flex gap-2">
 					<SlideShowNavButton handleClick={() => currentSlideIndex.set(0)}>
 						first_page

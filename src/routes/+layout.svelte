@@ -21,7 +21,7 @@
 	{#if !$page.error}
 		<Header />
 	{/if}
-	<main>
+	<main class="mx-auto max-w-5xl w-full">
 		<slot />
 	</main>
 {:else}

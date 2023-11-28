@@ -77,7 +77,7 @@
 	}
 </script>
 
-<div class="mx-auto w-full max-w-5xl">
+<div class="mx-auto w-full">
 	<div class="mb-8 flex justify-end">
 		<button
 			id="dropdownRadioButton"
@@ -191,13 +191,13 @@
 		</div>
 	</div>
 </div>
-<section class="mx-auto grid grid-cols-3 gap-8 max-w-5xl">
+<section class="mx-auto grid grid-cols-3 gap-8">
 	{#each $shows as showItem}
 		<div class="h-min aspect-video">
 			<div class="relative h-full [&>a]:!text-white">
 				<a
 					href={`/shows/${showItem.id}`}
-					class="block h-full bg-[#121212] rounded-md group"
+					class="block h-full bg-secondary-dark rounded-md group"
 				>
 					<h2
 						class="w-full px-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center group-hover:opacity-0 group-hover:ease-in-out duration-200"
@@ -228,6 +228,7 @@
 			<div class="pt-0.5 flex justify-between text-gray-300">
 				<GoogleIcon
 					iconType={`${showItem.public ? "visibility" : "visibility_off"}`}
+					className="text-xl"
 				/>
 				<p class="text-sm">
 					Updated: {convertTime(showItem.updated_at, {

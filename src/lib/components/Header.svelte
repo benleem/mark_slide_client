@@ -26,10 +26,12 @@
 	};
 </script>
 
-<header class="sticky top-0 right-0 bg-[#292929] z-99">
-	<nav class="flex justify-between">
-		<a class="m-2" href="/">Home</a>
-		<ul class="p-2 flex gap-2 justify-end">
+<header
+	class="py-4 mb-8 sticky top-0 right-0 bg-secondary-dark z-99 border-b-2 border-white border-opacity-25"
+>
+	<nav class="mx-auto flex justify-between max-w-5xl w-full">
+		<a class="mr-2" href="/">Home</a>
+		<ul class="flex gap-2 justify-end">
 			{#if !$user}
 				<li>
 					<LoginLinkButton />

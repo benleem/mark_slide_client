@@ -36,7 +36,7 @@
 	console.log($showSlides);
 </script>
 
-<section class="p-2 flex flex-1 overflow-hidden">
+<section class="p-4 flex flex-1 overflow-hidden">
 	<DragDropSlides bind:selectedSlide bind:renderMarkdown />
 	{#if $showSlides.length < 1}
 		<div
@@ -46,7 +46,7 @@
 		</div>
 	{:else if renderMarkdown}
 		<div
-			class="prose prose-invert max-w-none w-full prose-table:w-max overflow-scroll"
+			class="p-4 w-full max-w-none prose prose-invert prose-table:w-max overflow-scroll bg-secondary-dark rounded-xl"
 			role="button"
 			tabindex={0}
 			on:dblclick={() => toggleRenderMarkdown()}
@@ -55,7 +55,7 @@
 		</div>
 	{:else}
 		<textarea
-			class="block p-2.5 w-full h-full text-md outline-none bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ring-2 resize-none"
+			class="block p-2.5 w-full h-full text-md outline-none rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-secondary-dark dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ring-2 resize-none"
 			placeholder="Enter markdown here"
 			bind:this={markdownInputRef}
 			bind:value={selectedSlide.content}

@@ -10,6 +10,9 @@
 	};
 </script>
 
-<div class="bg-[#292929] overflow-scroll" bind:this={fullscreenContainer}>
+<div
+	class="bg-main-dark overflow-scroll h-full w-full"
+	bind:this={fullscreenContainer}
+>
 	<slot {toggleFullscreen} />
 </div>

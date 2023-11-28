@@ -135,7 +135,7 @@
 	// }
 </script>
 
-<div class="h-full overflow-scroll w-full max-w-xs pr-2">
+<div class="h-full overflow-scroll w-full max-w-[15rem] pr-4">
 	<div
 		aria-label="Slide List"
 		use:dndzone={{
@@ -158,24 +158,32 @@
 				<div
 					style={`${
 						slide && selectedSlide && slide.id === selectedSlide.id
-							? "border-color: #eab308; outline-style: solid; outline-width: 2px; outline-offset: -3px; outline-color: #eab308; "
+							? "border-color: #eab308; outline-style: solid; outline-width: 2px; outline-offset: -3px; outline-color: #eab308;"
 							: "border-color: white;"
 					}`}
-					class="relative p-2 mb-2 border-[1px] bg-[#292929] border-white aspect-video overflow-hidden"
+					class="relative p-2 mb-4 border-[1px] backdrop-blur cursor-pointer border-white rounded-lg aspect-video overflow-hidden"
 					on:click={() => handleSelectSlide(slide)}
 				>
 					<div
-						class="prose prose-invert w-full prose-table:w-max scale-50 origin-top"
+						class="prose prose-invert w-full prose-table:w-max scale-[40%] origin-top"
 					>
 						{@html marked(slide.content)}
 					</div>
 				</div>
-				<button
-					class="m-1 absolute bottom-0 right-0 hover:text-red-500 transition-colors ease-in-out duration-200"
-					on:click={() => deleteSlide(slide)}
+				<div
+					class="absolute bottom-0 left-0 w-full flex justify-between items-center"
 				>
-					<GoogleIcon iconType="delete" />
-				</button>
+					<span class="text-xs p-2">
+						{$showSlides.findIndex((showSlide) => showSlide.id === slide.id) +
+							1}
+					</span>
+					<button
+						class="mr-1 flex hover:text-red-500 transition-colors ease-in-out duration-200"
+						on:click={() => deleteSlide(slide)}
+					>
+						<GoogleIcon iconType="delete" className="text-xl" />
+					</button>
+				</div>
 			</div>
 		{/each}
 	</div>

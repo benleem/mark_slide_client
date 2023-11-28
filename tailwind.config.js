@@ -3,6 +3,10 @@ export default {
 	content: ["./src/**/*.{html,js,svelte,ts}"],
 	theme: {
 		extend: {
+			colors: {
+				"main-dark": "#0d1117",
+				"secondary-dark": "#161b22"
+			},
 			animation: {
 				"slide-up": "slide-up 0.2s ease-in"
 			},
