@@ -27,8 +27,6 @@
 	const showId = $page.params.id;
 	const flipDurationMs = 300;
 
-	$: console.log($showSlides);
-
 	function handleConsider(event: CustomEvent<DndEvent<Slide>>) {
 		showSlides.set(event.detail.items);
 	}
@@ -43,15 +41,15 @@
 		currentSlideIndex.set(currentSlide);
 	}
 
-	// async function saveChangesToSlide(slide: Slide) {
-	//     let editSlideData: UpdateSlideData = { index_number: slide.index_number, content: slide.content }
-	//     await patchSlide(editSlideData, slide.id);
-	// }
+	const handleSelectSlide = (slide: Slide) => {
+		selectedSlide = slide;
 
-	// async function deleteSlide(slide: Slide) {
-	//     let deleteSelectedSlideParams: DeleteSlideParams = { id: slide.id, user_id: slide.user_id, show_id: slide.show_id };
-	//     await removeSlideFromShow(deleteSelectedSlideParams);
-	// }
+		//setting slide index for slideshow starting point
+		let currentSlide = $showSlides.findIndex(
+			(slide) => slide.id === selectedSlide.id
+		);
+		currentSlideIndex.set(currentSlide);
+	};
 
 	async function createNewSlide() {
 		let newSlide = await addSlideToShow({
@@ -72,20 +70,22 @@
 		}
 	}
 
-	const handleSelectSlide = (slide: Slide) => {
-		selectedSlide = slide;
-
-		//setting slide index for slideshow starting point
-		let currentSlide = $showSlides.findIndex(
-			(slide) => slide.id === selectedSlide.id
-		);
-		currentSlideIndex.set(currentSlide);
-	};
+	async function saveChangesToSlide(slide: Slide) {
+		console.log("hello");
+		// let editSlideData: UpdateSlideData = {
+		// 	index_number: slide.index_number,
+		// 	content: slide.content
+		// };
+		// await patchSlide(editSlideData, slide.id);
+	}
 
 	const deleteSlide = async (slide: Slide) => {
+		let currentSlide = $showSlides.findIndex(
+			(slideData) => slideData.id === slide.id
+		);
 		let removedSlide = await removeSlideFromShow(slide.id, {
 			show_id: showId,
-			slide_index: slide.index_number
+			slide_index: currentSlide
 		});
 		if (removedSlide.slide === null || removedSlide.status !== "success") {
 			console.log("Error has occured");
@@ -129,11 +129,6 @@
 			console.log($showSlides);
 		}
 	};
-
-	// function changeSelectedSlide(i: number) {
-	//     /// ADD A CHECK FOR WHETHER THERE IS CONTENT IN THE SLIDE, IF NOT MAKE RENDER MARKDOWN = FALSE
-	//     selectedSlide.set(data[i]);
-	// }
 </script>
 
 <div class="h-full overflow-scroll w-full max-w-[15rem] pr-4">

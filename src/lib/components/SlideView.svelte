@@ -1,18 +1,16 @@
 <script lang="ts">
-	import type { Slide, TestSlide, UpdateSlideData } from "$lib/models/slides";
-	import { marked } from "marked";
 	import { patchSlide } from "$lib/utils/api/slides";
 	import { currentSlideIndex, showSlides } from "$lib/stores/slides";
-	import { slide } from "svelte/transition";
 	import DragDropSlides from "./DragDropSlides.svelte";
-	import { onMount } from "svelte";
 	import MarkDownRenderer from "./MarkDownRenderer.svelte";
 	import GoogleIcon from "./GoogleIcon.svelte";
 
 	let selectedSlide = $showSlides[$currentSlideIndex] || 0;
 	let markdownInputRef: HTMLTextAreaElement;
-	// let markdown : string = selectedSlide && selectedSlide.content ? selectedSlide.content : ""
 	let renderMarkdown: boolean = false;
+	let saveTimeout = setTimeout(() => {
+		console.log("Initializing save mode");
+	}, 1000);
 
 	const toggleRenderMarkdown = () => {
 		if (selectedSlide.content === "") {
@@ -34,6 +32,27 @@
 			return slide;
 		});
 		showSlides.set(updatedSlides);
+
+		// auto save
+		clearTimeout(saveTimeout);
+		saveTimeout = setTimeout(async () => {
+			let currentSlide = $showSlides.findIndex(
+				(slideData) => slideData.id === selectedSlide.id
+			);
+			let savedSlide = await patchSlide(
+				{
+					index_number: currentSlide,
+					content: selectedSlide.content
+				},
+				selectedSlide.id
+			);
+
+			if (savedSlide.slide === null || savedSlide.status !== "success") {
+				console.log("Error has occured");
+			} else if (savedSlide.slide) {
+				console.log("Slide saved");
+			}
+		}, 1000);
 	}
 </script>
 
