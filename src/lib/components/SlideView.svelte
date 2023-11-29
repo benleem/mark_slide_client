@@ -9,7 +9,7 @@
 	let markdownInputRef: HTMLTextAreaElement;
 	let renderMarkdown: boolean = false;
 	let saveTimeout = setTimeout(() => {
-		console.log("Initializing save mode");
+		console.log("Initializing auto save");
 	}, 1000);
 
 	const toggleRenderMarkdown = () => {
@@ -48,9 +48,9 @@
 			);
 
 			if (savedSlide.slide === null || savedSlide.status !== "success") {
-				console.log("Error has occured");
+				console.log(`Error occured while saving slide: ${selectedSlide.id}`);
 			} else if (savedSlide.slide) {
-				console.log("Slide saved");
+				console.log(`Slide saved: ${selectedSlide.id}`);
 			}
 		}, 1000);
 	}
