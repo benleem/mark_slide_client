@@ -171,20 +171,15 @@
 						<MarkDownRenderer content={slide.content} />
 					</div>
 				</div>
-				<div
-					class="absolute bottom-0 left-0 w-full flex justify-between items-center cursor-pointer"
+				<span class="absolute bottom-0 left-0 text-xs p-2 cursor-pointer">
+					{$showSlides.findIndex((showSlide) => showSlide.id === slide.id) + 1}
+				</span>
+				<button
+					class="absolute bottom-0 right-0 mr-1 flex hover:text-red-500 transition-colors ease-in-out duration-200"
+					on:click={() => deleteSlide(slide)}
 				>
-					<span class="text-xs p-2">
-						{$showSlides.findIndex((showSlide) => showSlide.id === slide.id) +
-							1}
-					</span>
-					<button
-						class="mr-1 flex hover:text-red-500 transition-colors ease-in-out duration-200"
-						on:click={() => deleteSlide(slide)}
-					>
-						<GoogleIcon iconType="delete" className="text-xl" />
-					</button>
-				</div>
+					<GoogleIcon iconType="delete" className="text-xl" />
+				</button>
 			</div>
 		{/each}
 	</div>
