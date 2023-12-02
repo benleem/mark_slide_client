@@ -71,7 +71,6 @@
 	}
 
 	async function saveChangesToSlide(slide: Slide) {
-		console.log("hello");
 		// let editSlideData: UpdateSlideData = {
 		// 	index_number: slide.index_number,
 		// 	content: slide.content
@@ -126,7 +125,6 @@
 
 				selectedSlide = $showSlides[$currentSlideIndex];
 			}
-			console.log($showSlides);
 		}
 	};
 </script>

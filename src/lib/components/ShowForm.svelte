@@ -14,6 +14,7 @@
 	import { disableModalActive, getModalActive } from "$lib/context/modal";
 	import { v4 as uuidv4 } from "uuid";
 	import GoogleIcon from "./GoogleIcon.svelte";
+	import CheckBox from "./Inputs/CheckBox.svelte";
 
 	const modal = getModalActive();
 
@@ -51,7 +52,6 @@
 	}
 
 	const handleSubmit = async () => {
-		console.log("hello");
 		formLoading = true;
 
 		const response =
@@ -108,7 +108,7 @@
 
 {#if mode === "show-delete" || mode === "show-delete-single"}
 	<form
-		class="p-5 flex flex-col bg-[#030303] rounded-md border-[1px] border-gray-600"
+		class="p-5 flex flex-col bg-secondary-dark rounded-md border-[1px] border-gray-600"
 		on:submit|preventDefault={() => handleDelete()}
 	>
 		<div class="pb-2 flex justify-between border-b-[1px] border-gray-600">
@@ -141,7 +141,7 @@
 	</form>
 {:else}
 	<form
-		class="p-5 flex flex-col gap-2 bg-[#030303] rounded-md border-[1px] border-gray-600"
+		class="p-5 flex flex-col gap-2 bg-secondary-dark rounded-md border-[1px] border-gray-600"
 		novalidate
 		autocomplete="off"
 		on:submit|preventDefault={() => handleSubmit()}
@@ -171,10 +171,11 @@
 		/>
 
 		{#if isEditData(showFormData)}
-			<label>
-				<input type="checkbox" bind:checked={showFormData.view_code} />
-				Generate me a new view code
-			</label>
+			<CheckBox
+				label="Generate me a new view code"
+				name="view-code"
+				bind:value={showFormData.view_code}
+			/>
 		{/if}
 
 		<div class="flex justify-between">
