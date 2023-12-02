@@ -8,12 +8,14 @@ export default {
 				"secondary-dark": "#161b22"
 			},
 			animation: {
-				"slide-up": "slide-up 0.2s ease-in"
+				"fade-in-out": "fade-in-out 1.5s ease-in-out"
 			},
 			keyframes: {
-				"slide-up": {
-					"0%": { transform: "translateY(100%)", opacity: 0 },
-					"100%": { transform: "translateY(0%)", opacity: 1 }
+				"fade-in-out": {
+					"0%": { opacity: 0 },
+					"25%": { opacity: 1 },
+					"85%": { opacity: 1 },
+					"100%": { opacity: 0 }
 				}
 			}
 		}

@@ -30,4 +30,3 @@
 	</main>
 {/if}
 <ModalContainer />
-<AlertBox />

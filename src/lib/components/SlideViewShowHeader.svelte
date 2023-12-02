@@ -9,6 +9,7 @@
 	import { getAlertActive, setAlertActive } from "$lib/context/alert";
 	import { text } from "@sveltejs/kit";
 	import { setFeatureFlag } from "svelte-dnd-action";
+	import AlertBox from "./AlertBox.svelte";
 
 	export let toggleViewMode: () => void;
 
@@ -33,7 +34,7 @@
 </script>
 
 {#if $currentShow}
-	<section class="bg-blue-600">
+	<section class="relative bg-blue-600">
 		<div class="mx-auto max-w-5xl flex justify-between p-2">
 			<div class="flex items-center gap-2">
 				<a class="flex text-white" href="/profile">
@@ -95,5 +96,6 @@
 				</button>
 			</div>
 		</div>
+		<AlertBox />
 	</section>
 {/if}
