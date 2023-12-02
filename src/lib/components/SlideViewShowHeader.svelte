@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ModalType } from "$lib/models/modal";
 	import { currentShow } from "$lib/stores/currentShow";
-	import { getModalActive } from "$lib/context/modal";
+	import { getModalActive, setModalActive } from "$lib/context/modal";
 	import { convertTime } from "$lib/utils/helpers";
 	import GoogleIcon from "./GoogleIcon.svelte";
 	import { page } from "$app/stores";
@@ -81,13 +81,15 @@
 				</button>
 				<button
 					class="flex border-white hover:text-yellow-500 transition-colors ease-in-out duration-200"
-					on:click={() => handleFormOpen("show-edit-single")}
+					on:click={() =>
+						setModalActive(modal, "show-edit-single", $currentShow)}
 				>
 					<GoogleIcon iconType="edit" />
 				</button>
 				<button
 					class="flex hover:text-red-500 transition-colors ease-in-out duration-200"
-					on:click={() => handleFormOpen("show-delete-single")}
+					on:click={() =>
+						setModalActive(modal, "show-delete-single", $currentShow)}
 				>
 					<GoogleIcon iconType="delete" />
 				</button>

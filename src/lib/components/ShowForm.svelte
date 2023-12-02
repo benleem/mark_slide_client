@@ -11,11 +11,12 @@
 	import { currentShow } from "$lib/stores/currentShow";
 	import TextInput from "./Inputs/TextInput.svelte";
 	import RadioInput from "./Inputs/RadioInput.svelte";
-	import { getModalActive } from "$lib/context/modal";
+	import { disableModalActive, getModalActive } from "$lib/context/modal";
 	import { v4 as uuidv4 } from "uuid";
 	import GoogleIcon from "./GoogleIcon.svelte";
 
 	const modal = getModalActive();
+
 	export let mode: ModalType;
 	export let show: Show;
 
@@ -50,8 +51,7 @@
 	}
 
 	const handleSubmit = async () => {
-		console.log("Submitting: ", showFormData);
-		console.log("Mode: ", mode);
+		console.log("hello");
 		formLoading = true;
 
 		const response =
@@ -78,11 +78,7 @@
 			if (mode === "show-edit-single") {
 				currentShow.set(showResponse);
 			}
-			$modal = {
-				active: false,
-				type: null,
-				data: null
-			};
+			disableModalActive(modal);
 		}
 		formLoading = false;
 	};
@@ -104,11 +100,7 @@
 				currentShow.set(null);
 				goto("/profile");
 			}
-			$modal = {
-				active: false,
-				type: null,
-				data: null
-			};
+			disableModalActive(modal);
 		}
 		formLoading = false;
 	};
@@ -122,13 +114,14 @@
 		<div class="pb-2 flex justify-between border-b-[1px] border-gray-600">
 			<h3 class="text-lg">Delete show</h3>
 			<button
+				class="bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
+				type="button"
 				on:click={() =>
 					($modal = {
 						active: false,
 						type: null,
 						data: null
 					})}
-				class="bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
 			>
 				<GoogleIcon iconType="close" />
 			</button>
@@ -158,13 +151,14 @@
 				{mode === "show-add" ? "Add show" : "Edit show details"}
 			</h3>
 			<button
+				class="bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
+				type="button"
 				on:click={() =>
 					($modal = {
 						active: false,
 						type: null,
 						data: null
 					})}
-				class="bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
 			>
 				<GoogleIcon iconType="close" />
 			</button>

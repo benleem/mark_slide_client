@@ -44,3 +44,11 @@ export const setModalActive = (
 		data
 	});
 };
+
+export const disableModalActive = (modal: Writable<Modal>) => {
+	modal.set({
+		active: false,
+		type: null,
+		data: null
+	});
+};

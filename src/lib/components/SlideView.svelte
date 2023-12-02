@@ -10,7 +10,7 @@
 	let renderMarkdown: boolean = false;
 	let saveTimeout = setTimeout(() => {
 		console.log("Initializing auto save");
-	}, 1000);
+	}, 0);
 
 	const toggleRenderMarkdown = () => {
 		if (selectedSlide.content === "") {

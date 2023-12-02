@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from "$app/environment";
-	import { getModalActive } from "$lib/context/modal";
+	import { disableModalActive, getModalActive } from "$lib/context/modal";
 	import ShowForm from "./ShowForm.svelte";
 
 	const modal = getModalActive();
@@ -23,12 +23,7 @@
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
 			class="fixed top-0 left-0 h-full w-full"
-			on:click={() =>
-				($modal = {
-					active: false,
-					type: null,
-					data: null
-				})}
+			on:click={() => disableModalActive(modal)}
 		/>
 		<div class="relative max-h-[95%] max-w-md w-full overflow-scroll">
 			{#if $modal.type && $modal.type.includes("show") && $modal.data}
