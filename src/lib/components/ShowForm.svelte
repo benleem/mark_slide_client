@@ -11,11 +11,13 @@
 	import { currentShow } from "$lib/stores/currentShow";
 	import TextInput from "./Inputs/TextInput.svelte";
 	import RadioInput from "./Inputs/RadioInput.svelte";
-	import { getModalActive } from "$lib/context/modal";
+	import { disableModalActive, getModalActive } from "$lib/context/modal";
 	import { v4 as uuidv4 } from "uuid";
 	import GoogleIcon from "./GoogleIcon.svelte";
+	import CheckBox from "./Inputs/CheckBox.svelte";
 
 	const modal = getModalActive();
+
 	export let mode: ModalType;
 	export let show: Show;
 
@@ -50,8 +52,6 @@
 	}
 
 	const handleSubmit = async () => {
-		console.log("Submitting: ", showFormData);
-		console.log("Mode: ", mode);
 		formLoading = true;
 
 		const response =
@@ -78,11 +78,7 @@
 			if (mode === "show-edit-single") {
 				currentShow.set(showResponse);
 			}
-			$modal = {
-				active: false,
-				type: null,
-				data: null
-			};
+			disableModalActive(modal);
 		}
 		formLoading = false;
 	};
@@ -104,11 +100,7 @@
 				currentShow.set(null);
 				goto("/profile");
 			}
-			$modal = {
-				active: false,
-				type: null,
-				data: null
-			};
+			disableModalActive(modal);
 		}
 		formLoading = false;
 	};
@@ -116,19 +108,20 @@
 
 {#if mode === "show-delete" || mode === "show-delete-single"}
 	<form
-		class="p-5 flex flex-col bg-[#030303] rounded-md border-[1px] border-gray-600"
+		class="p-5 flex flex-col bg-secondary-dark rounded-md border-[1px] border-gray-600"
 		on:submit|preventDefault={() => handleDelete()}
 	>
 		<div class="pb-2 flex justify-between border-b-[1px] border-gray-600">
 			<h3 class="text-lg">Delete show</h3>
 			<button
+				class="bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
+				type="button"
 				on:click={() =>
 					($modal = {
 						active: false,
 						type: null,
 						data: null
 					})}
-				class="bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
 			>
 				<GoogleIcon iconType="close" />
 			</button>
@@ -148,7 +141,7 @@
 	</form>
 {:else}
 	<form
-		class="p-5 flex flex-col gap-2 bg-[#030303] rounded-md border-[1px] border-gray-600"
+		class="p-5 flex flex-col gap-2 bg-secondary-dark rounded-md border-[1px] border-gray-600"
 		novalidate
 		autocomplete="off"
 		on:submit|preventDefault={() => handleSubmit()}
@@ -158,13 +151,14 @@
 				{mode === "show-add" ? "Add show" : "Edit show details"}
 			</h3>
 			<button
+				class="bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
+				type="button"
 				on:click={() =>
 					($modal = {
 						active: false,
 						type: null,
 						data: null
 					})}
-				class="bg-gray-600 rounded hover:bg-gray-500 transition-colors duration-200 ease-in-out"
 			>
 				<GoogleIcon iconType="close" />
 			</button>
@@ -177,10 +171,11 @@
 		/>
 
 		{#if isEditData(showFormData)}
-			<label>
-				<input type="checkbox" bind:checked={showFormData.view_code} />
-				Generate me a new view code
-			</label>
+			<CheckBox
+				label="Generate me a new view code"
+				name="view-code"
+				bind:value={showFormData.view_code}
+			/>
 		{/if}
 
 		<div class="flex justify-between">

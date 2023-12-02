@@ -6,6 +6,7 @@
 	import { onMount } from "svelte";
 	import GoogleIcon from "./GoogleIcon.svelte";
 	import { goto } from "$app/navigation";
+	import MarkDownRenderer from "./MarkDownRenderer.svelte";
 
 	export let canEdit: boolean;
 	export let toggleViewMode: () => void;
@@ -29,43 +30,44 @@
 	};
 </script>
 
-<section class="flex flex-1 relative">
+<section class="flex flex-1 relative w-full">
 	{#if $showSlides.length > 0}
 		<FullScreenWrapper let:toggleFullscreen>
-			<div
-				class="p-2 prose prose-invert max-w-none w-full prose-table:w-max overflow-scroll"
-			>
-				{@html marked(selectedSlide.content)}
-			</div>
-			<div class="w-full p-2 fixed bottom-0 left-0 flex justify-between">
-				<div class="flex gap-2">
-					<SlideShowNavButton handleClick={() => currentSlideIndex.set(0)}>
-						first_page
-					</SlideShowNavButton>
-					<SlideShowNavButton handleClick={() => previousSlide()}>
-						navigate_before
-					</SlideShowNavButton>
-					<SlideShowNavButton handleClick={() => nextSlide()}>
-						navigate_next
-					</SlideShowNavButton>
-					<SlideShowNavButton
-						handleClick={() => currentSlideIndex.set($showSlides.length - 1)}
-					>
-						last_page
-					</SlideShowNavButton>
-					<p class="p-1 bg-blue-500 text-white rounded">
-						{$currentSlideIndex + 1} / {$showSlides.length}
-					</p>
-				</div>
-				<div class="flex gap-2">
-					<SlideShowNavButton handleClick={() => toggleFullscreen()}>
-						fullscreen
-					</SlideShowNavButton>
-					<SlideShowNavButton
-						handleClick={() => (canEdit ? toggleViewMode() : goto("/"))}
-					>
-						close
-					</SlideShowNavButton>
+			<div class="mx-auto max-w-5xl w-full min-h-full bg-secondary-dark">
+				<div class="p-8 bg-secondary-dark">
+					<MarkDownRenderer content={selectedSlide.content} />
+					<div class="w-full p-4 fixed bottom-0 left-0 flex justify-between">
+						<div class="flex gap-2">
+							<SlideShowNavButton handleClick={() => currentSlideIndex.set(0)}>
+								first_page
+							</SlideShowNavButton>
+							<SlideShowNavButton handleClick={() => previousSlide()}>
+								navigate_before
+							</SlideShowNavButton>
+							<SlideShowNavButton handleClick={() => nextSlide()}>
+								navigate_next
+							</SlideShowNavButton>
+							<SlideShowNavButton
+								handleClick={() =>
+									currentSlideIndex.set($showSlides.length - 1)}
+							>
+								last_page
+							</SlideShowNavButton>
+							<p class="p-1 bg-blue-500 text-white rounded">
+								{$currentSlideIndex + 1} / {$showSlides.length}
+							</p>
+						</div>
+						<div class="flex gap-2">
+							<SlideShowNavButton handleClick={() => toggleFullscreen()}>
+								fullscreen
+							</SlideShowNavButton>
+							<SlideShowNavButton
+								handleClick={() => (canEdit ? toggleViewMode() : goto("/"))}
+							>
+								close
+							</SlideShowNavButton>
+						</div>
+					</div>
 				</div>
 			</div>
 		</FullScreenWrapper>

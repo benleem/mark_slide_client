@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ModalType } from "$lib/models/modal";
 	import { currentShow } from "$lib/stores/currentShow";
-	import { getModalActive } from "$lib/context/modal";
+	import { getModalActive, setModalActive } from "$lib/context/modal";
 	import { convertTime } from "$lib/utils/helpers";
 	import GoogleIcon from "./GoogleIcon.svelte";
 	import { page } from "$app/stores";
@@ -9,6 +9,7 @@
 	import { getAlertActive, setAlertActive } from "$lib/context/alert";
 	import { text } from "@sveltejs/kit";
 	import { setFeatureFlag } from "svelte-dnd-action";
+	import AlertBox from "./AlertBox.svelte";
 
 	export let toggleViewMode: () => void;
 
@@ -33,12 +34,13 @@
 </script>
 
 {#if $currentShow}
-	<section class="bg-blue-600">
+	<section class="relative bg-blue-600">
 		<div class="mx-auto max-w-5xl flex justify-between p-2">
 			<div class="flex items-center gap-2">
 				<a class="flex text-white" href="/profile">
 					<GoogleIcon iconType="arrow_back" />
 				</a>
+
 				<div>
 					<div class="flex items-end">
 						<p class="material-symbols-outlined pr-1">
@@ -80,17 +82,20 @@
 				</button>
 				<button
 					class="flex border-white hover:text-yellow-500 transition-colors ease-in-out duration-200"
-					on:click={() => handleFormOpen("show-edit-single")}
+					on:click={() =>
+						setModalActive(modal, "show-edit-single", $currentShow)}
 				>
 					<GoogleIcon iconType="edit" />
 				</button>
 				<button
 					class="flex hover:text-red-500 transition-colors ease-in-out duration-200"
-					on:click={() => handleFormOpen("show-delete-single")}
+					on:click={() =>
+						setModalActive(modal, "show-delete-single", $currentShow)}
 				>
 					<GoogleIcon iconType="delete" />
 				</button>
 			</div>
 		</div>
+		<AlertBox />
 	</section>
 {/if}

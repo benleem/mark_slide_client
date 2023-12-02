@@ -19,14 +19,13 @@
 	import { currentSlideIndex, showSlides } from "$lib/stores/slides";
 	import { goto } from "$app/navigation";
 	import GoogleIcon from "./GoogleIcon.svelte";
+	import MarkDownRenderer from "./MarkDownRenderer.svelte";
 
 	export let selectedSlide: Slide;
 	export let renderMarkdown: boolean;
 
 	const showId = $page.params.id;
 	const flipDurationMs = 300;
-
-	$: console.log($showSlides);
 
 	function handleConsider(event: CustomEvent<DndEvent<Slide>>) {
 		showSlides.set(event.detail.items);
@@ -42,15 +41,15 @@
 		currentSlideIndex.set(currentSlide);
 	}
 
-	// async function saveChangesToSlide(slide: Slide) {
-	//     let editSlideData: UpdateSlideData = { index_number: slide.index_number, content: slide.content }
-	//     await patchSlide(editSlideData, slide.id);
-	// }
+	const handleSelectSlide = (slide: Slide) => {
+		selectedSlide = slide;
 
-	// async function deleteSlide(slide: Slide) {
-	//     let deleteSelectedSlideParams: DeleteSlideParams = { id: slide.id, user_id: slide.user_id, show_id: slide.show_id };
-	//     await removeSlideFromShow(deleteSelectedSlideParams);
-	// }
+		//setting slide index for slideshow starting point
+		let currentSlide = $showSlides.findIndex(
+			(slide) => slide.id === selectedSlide.id
+		);
+		currentSlideIndex.set(currentSlide);
+	};
 
 	async function createNewSlide() {
 		let newSlide = await addSlideToShow({
@@ -71,20 +70,21 @@
 		}
 	}
 
-	const handleSelectSlide = (slide: Slide) => {
-		selectedSlide = slide;
-
-		//setting slide index for slideshow starting point
-		let currentSlide = $showSlides.findIndex(
-			(slide) => slide.id === selectedSlide.id
-		);
-		currentSlideIndex.set(currentSlide);
-	};
+	async function saveChangesToSlide(slide: Slide) {
+		// let editSlideData: UpdateSlideData = {
+		// 	index_number: slide.index_number,
+		// 	content: slide.content
+		// };
+		// await patchSlide(editSlideData, slide.id);
+	}
 
 	const deleteSlide = async (slide: Slide) => {
+		let currentSlide = $showSlides.findIndex(
+			(slideData) => slideData.id === slide.id
+		);
 		let removedSlide = await removeSlideFromShow(slide.id, {
 			show_id: showId,
-			slide_index: slide.index_number
+			slide_index: currentSlide
 		});
 		if (removedSlide.slide === null || removedSlide.status !== "success") {
 			console.log("Error has occured");
@@ -125,17 +125,11 @@
 
 				selectedSlide = $showSlides[$currentSlideIndex];
 			}
-			console.log($showSlides);
 		}
 	};
-
-	// function changeSelectedSlide(i: number) {
-	//     /// ADD A CHECK FOR WHETHER THERE IS CONTENT IN THE SLIDE, IF NOT MAKE RENDER MARKDOWN = FALSE
-	//     selectedSlide.set(data[i]);
-	// }
 </script>
 
-<div class="h-full overflow-scroll w-full max-w-xs pr-2">
+<div class="h-full overflow-scroll w-full max-w-[15rem] pr-4">
 	<div
 		aria-label="Slide List"
 		use:dndzone={{
@@ -155,26 +149,29 @@
 				aria-label={slide.content}
 				animate:flip={{ duration: flipDurationMs }}
 			>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				<!-- svelte-ignore a11y-no-static-element-interactions -->
 				<div
 					style={`${
 						slide && selectedSlide && slide.id === selectedSlide.id
-							? "border-color: #eab308; outline-style: solid; outline-width: 2px; outline-offset: -3px; outline-color: #eab308; "
+							? "border-color: #eab308;"
 							: "border-color: white;"
 					}`}
-					class="relative p-2 mb-2 border-[1px] bg-[#292929] border-white aspect-video overflow-hidden"
+					class="relative p-2 mb-4 border-[1px] backdrop-blur cursor-pointer border-white rounded-lg aspect-video overflow-hidden"
 					on:click={() => handleSelectSlide(slide)}
 				>
-					<div
-						class="prose prose-invert w-full prose-table:w-max scale-50 origin-top"
-					>
-						{@html marked(slide.content)}
+					<div class="scale-[50%] origin-top">
+						<MarkDownRenderer content={slide.content} />
 					</div>
 				</div>
+				<span class="absolute bottom-0 left-0 text-xs p-2 cursor-pointer">
+					{$showSlides.findIndex((showSlide) => showSlide.id === slide.id) + 1}
+				</span>
 				<button
-					class="m-1 absolute bottom-0 right-0 hover:text-red-500 transition-colors ease-in-out duration-200"
+					class="absolute bottom-0 right-0 mr-1 flex hover:text-red-500 transition-colors ease-in-out duration-200"
 					on:click={() => deleteSlide(slide)}
 				>
-					<GoogleIcon iconType="delete" />
+					<GoogleIcon iconType="delete" className="text-xl" />
 				</button>
 			</div>
 		{/each}
