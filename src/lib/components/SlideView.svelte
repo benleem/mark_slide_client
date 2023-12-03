@@ -62,7 +62,7 @@
 		<div
 			class="w-full grid place-items-center border-dashed border-2 border-white"
 		>
-			<p>This show has no slides</p>
+			<p>This show has no slides {":("}</p>
 		</div>
 	{:else}
 		<div class="relative h-full w-full">
