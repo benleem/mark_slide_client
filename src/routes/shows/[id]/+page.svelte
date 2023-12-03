@@ -27,7 +27,10 @@
 	const toggleViewMode = () => {
 		let searchParams = new URLSearchParams($page.url.searchParams.toString());
 		searchParams.set("viewMode", `${!viewMode}`);
-		goto(`?${searchParams.toString()}`, { invalidateAll: false });
+		goto(`?${searchParams.toString()}`, {
+			invalidateAll: false,
+			replaceState: false
+		});
 	};
 </script>
 

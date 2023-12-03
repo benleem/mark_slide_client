@@ -35,13 +35,12 @@
 
 {#if $currentShow}
 	<section class="relative bg-blue-600">
-		<div class="mx-auto max-w-5xl flex justify-between p-2">
+		<div class="mx-auto max-w-5xl flex justify-between py-2 px-4">
 			<div class="flex items-center gap-2">
 				<a class="flex text-white" href="/profile">
 					<GoogleIcon iconType="arrow_back" />
 				</a>
-
-				<div>
+				<div class="w-max">
 					<div class="flex items-end">
 						<p class="material-symbols-outlined pr-1">
 							{#if $currentShow.public}
@@ -50,7 +49,7 @@
 								visibility_off
 							{/if}
 						</p>
-						<h1 class="text-lg leading-tight font-semibold pr-2">
+						<h1 class="text-lg leading-tight font-semibold">
 							{$currentShow.title}
 						</h1>
 					</div>
@@ -64,8 +63,8 @@
 					</p>
 				</div>
 			</div>
-			<div class="flex items-center">
-				<p class="text-sm">{$currentShow.description}</p>
+			<div class="flex items-center truncate px-4">
+				<p class="text-sm truncate">{$currentShow.description}</p>
 			</div>
 			<div class="flex gap-2 items-center text-white">
 				<button
