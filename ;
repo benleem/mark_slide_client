@@ -1,11 +1,5 @@
 import type { PageServerLoad } from "./$types";
 import { getInitialUserShows } from "$lib/utils/api/shows";
-import {
-	ascendingString,
-	alphabeticString,
-	AlphabeticFilter,
-	UpdatedFilter
-} from "$lib/utils/ordering";
 import { error } from "@sveltejs/kit";
 
 export const load: PageServerLoad = async (event) => {
@@ -13,19 +7,15 @@ export const load: PageServerLoad = async (event) => {
 	const user = locals.user;
 	const params = url.searchParams;
 	const favorites = params.get("favorites") === "true";
-	let orderParams = params.get("orderBy")?.split("_");
+	const orderBy = params.get("orderBy");
 
-	orderParams = orderParams == undefined ? ["alph", "asc"] : orderParams;
-	let alphabetic = alphabeticString(orderParams[0]);
-	let ascending = ascendingString(orderParams[1]);
-
-	const shows = await getInitialUserShows(event, user.id, favorites);
-	if (alphabetic) {
-		AlphabeticFilter(shows.shows, ascending);
+	let orderParams = orderBy.split("_");
+	if (orderParams[0] === "alph") {
+	} else if (orderParams[0] === "updated") {
 	} else {
-		UpdatedFilter(shows.shows, ascending);
 	}
 
+	const shows = await getInitialUserShows(event, user.id, favorites);
 	console.log(shows.shows);
 
 	// console.log(event.url.searchParams.get("hi"));

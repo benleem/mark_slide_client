@@ -4,15 +4,37 @@
 	import { shows } from "$lib/stores/shows";
 	import { page } from "$app/stores";
 
-	$: orderType = $page.url.searchParams.get("orderBy");
+	import {
+		ascendingString,
+		alphabeticString,
+		AlphabeticFilter,
+		UpdatedFilter
+	} from "$lib/utils/ordering";
 
-	const orderBy = () => {
+	$: {
+		let orderParams = $page.url.searchParams.get("orderBy")?.split("_");
+		orderParams = orderParams == undefined ? ["alph", "asc"] : orderParams;
+		let alphabetic = alphabeticString(orderParams[0]);
+		let ascending = ascendingString(orderParams[1]);
+		let orderType = "";
+		if (alphabetic) {
+			orderType += "alph_";
+			orderType += ascending ? "asc" : "desc";
+			AlphabeticFilter($shows, ascending);
+		} else {
+			orderType += "updated_";
+			orderType += ascending ? "asc" : "desc";
+			UpdatedFilter($shows, ascending);
+		}
+	}
+
+	function orderBy() {
 		let searchParams = new URLSearchParams($page.url.searchParams.toString());
 		searchParams.set("orderBy", `${orderType}`);
 		goto(`?${searchParams.toString()}`, {
 			invalidateAll: true
 		});
-	};
+	}
 
 	function toggleDropdown() {
 		var dropdown = document.getElementById("dropdownDefaultRadio");
@@ -25,46 +47,33 @@
 		}
 	}
 
-	function AlphabeticFilter(shows: Show[], ascending: boolean) {
-		shows.sort((a, b) => {
-			const valueA = a.title.toLowerCase();
-			const valueB = b.title.toLowerCase();
-
-			if (ascending) {
-				if (valueA < valueB) return -1;
-				if (valueA > valueB) return 1;
-			} else {
-				if (valueA > valueB) return -1;
-				if (valueA < valueB) return 1;
-			}
-
-			return 0;
-		});
-	}
-
-	function UpdatedFilter(shows: Show[], ascending: boolean) {
-		shows.sort((a, b) => {
-			const valueA = new Date(a.updated_at).getTime();
-			const valueB = new Date(b.updated_at).getTime();
-
-			if (ascending) {
-				if (valueA < valueB) return -1;
-				if (valueA > valueB) return 1;
-			} else {
-				if (valueA > valueB) return -1;
-				if (valueA < valueB) return 1;
-			}
-
-			return 0;
-		});
-	}
-
-	function selectOption(filtering_mode: string, ascending: boolean) {
+	async function selectOption(filtering_mode: string, ascending: boolean) {
+		let param = "";
 		if (filtering_mode === "Alphabetic") {
+			param += "alph_";
+			param += ascending ? "asc" : "desc";
+			console.log(param);
+			toggleDropdown();
+			let searchParams = new URLSearchParams($page.url.searchParams.toString());
+			searchParams.set("orderBy", `${param}`);
+
+			await goto(`?${searchParams.toString()}`, {
+				invalidateAll: true
+			});
 			AlphabeticFilter($shows, ascending);
 		}
 
 		if (filtering_mode === "Updated") {
+			param += "updated_";
+			param += ascending ? "asc" : "desc";
+			console.log(param);
+			toggleDropdown();
+			let searchParams = new URLSearchParams($page.url.searchParams.toString());
+			searchParams.set("orderBy", `${param}`);
+
+			await goto(`?${searchParams.toString()}`, {
+				invalidateAll: true
+			});
 			UpdatedFilter($shows, ascending);
 		}
 
@@ -116,7 +125,7 @@
 					<div class="flex items-center">
 						<input
 							checked
-							id="default-radio-1"
+							id="updated-desc"
 							type="radio"
 							value=""
 							name="default-radio"
@@ -135,7 +144,7 @@
 				<li>
 					<div class="flex items-center">
 						<input
-							id="default-radio-2"
+							id="updated-asc"
 							type="radio"
 							value=""
 							name="default-radio"
@@ -154,7 +163,7 @@
 				<li>
 					<div class="flex items-center">
 						<input
-							id="default-radio-3"
+							id="alph-asc"
 							type="radio"
 							value=""
 							name="default-radio"
@@ -172,7 +181,7 @@
 				<li>
 					<div class="flex items-center">
 						<input
-							id="default-radio-3"
+							id="alph-desc"
 							type="radio"
 							value=""
 							name="default-radio"
