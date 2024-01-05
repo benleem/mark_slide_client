@@ -113,44 +113,46 @@ export const getInitialUserShows = async (
 	}
 };
 
-// export const getUserShows = async (
-// 	userId: number,
-// 	favorites: boolean
-// ): Promise<{
-// 	shows: Show[];
-// 	status: string;
-// }> => {
-// 	try {
-// 		const response = await fetch(
-// 			`${PUBLIC_API_BASE_URL}/shows/users/${userId}?favorites=${favorites}`,
-// 			{ credentials: "include" }
-// 		);
-// 		const responseJson = await response.json();
+export const getUserShowsLike = async (
+	userId: number,
+	favorites: boolean,
+	like_query: string
+): Promise<{
+	shows: Show[];
+	status: string;
+}> => {
+	console.log("Getting user shows like");
+	try {
+		const response = await fetch(
+			`${PUBLIC_API_BASE_URL}/shows/users/${userId}?favorites=${favorites}&like_query=${like_query}`,
+			{ credentials: "include" }
+		);
+		const responseJson = await response.json();
 
-// 		if (responseJson.status !== "success") {
-// 			return {
-// 				shows: [],
-// 				status: responseJson.status as string
-// 			};
-// 		}
-// 		const shows: Show[] = responseJson.data.shows;
-// 		return {
-// 			shows,
-// 			status: responseJson.status as string
-// 		};
-// 	} catch (error) {
-// 		if (error instanceof Error) {
-// 			return {
-// 				shows: [],
-// 				status: error.message as string
-// 			};
-// 		}
-// 		return {
-// 			shows: [],
-// 			status: error as string
-// 		};
-// 	}
-// };
+		if (responseJson.status !== "success") {
+			return {
+				shows: [],
+				status: responseJson.status as string
+			};
+		}
+		const shows: Show[] = responseJson.data.shows;
+		return {
+			shows,
+			status: responseJson.status as string
+		};
+	} catch (error) {
+		if (error instanceof Error) {
+			return {
+				shows: [],
+				status: error.message as string
+			};
+		}
+		return {
+			shows: [],
+			status: error as string
+		};
+	}
+};
 
 export const getShowById = async (
 	event: ServerLoadEvent<RouteParams, NonNullable<unknown>, string>,

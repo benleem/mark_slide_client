@@ -9,6 +9,10 @@ export type Show = {
 	updated_at: Date;
 };
 
+export type SearchShowFormData = {
+	like_query: string;
+};
+
 export type CreateShowFormData = {
 	title: string;
 	description: string;

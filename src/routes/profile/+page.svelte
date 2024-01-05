@@ -3,6 +3,7 @@
 	import { shows } from "$lib/stores/shows";
 	import LogoutButton from "$lib/components/LogoutButton.svelte";
 	import ShowView from "$lib/components/ShowView.svelte";
+	import SearchBar from "$lib/components/SearchBar.svelte";
 	import OrderByRadio from "$lib/components/OrderByRadio.svelte";
 	import ToggleFavorites from "$lib/components/ToggleFavorites.svelte";
 	import { page } from "$app/stores";
@@ -34,6 +35,7 @@
 		</div>
 	</section>
 	<section class="pt-8">
+		<SearchBar />
 		<ShowView />
 	</section>
 </div>
